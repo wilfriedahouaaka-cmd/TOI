@@ -1,0 +1,115 @@
+:root {
+    /* Palette DESIGN.md (Neo-Brutaliste) */
+    --paper: #fef9ef; /* surface */
+    --ink-black: #111111; /* on-surface / primary */
+    --vivid-coral: #FF6B4A; /* secondary-container / accent */
+    --sun-yellow: #FFC93C; /* tertiary-fixed / accent */
+    --bold-turquoise: #1FA69A; /* accent secondary */
+    --forest-green: #1E5E45; /* accent grounded */
+    --surface-dim: #dedad0;
+
+    /* Typographies */
+    --font-anton: 'Anton', sans-serif;
+    --font-playfair: 'Playfair Display', serif;
+    --font-space: 'Space Grotesk', sans-serif;
+
+    /* Bordures et Ombres */
+    --border-thick: 3px solid var(--ink-black);
+    --border-thin: 2px solid var(--ink-black);
+    --shadow-hard: 4px 4px 0px var(--ink-black);
+    --shadow-small: 2px 2px 0px var(--ink-black);
+}
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--paper);
+    color: var(--ink-black);
+    font-family: var(--font-space);
+    width: 100%;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* Système de navigation par scroll */
+#main-container {
+    height: 100dvh;
+    overflow-y: scroll;
+    scroll-snap-type: y proximity;
+    scroll-behavior: smooth;
+}
+
+.page {
+    width: 100%;
+    min-height: 100dvh;
+    scroll-snap-align: start;
+    position: relative;
+    padding: env(safe-area-inset-top) 1rem env(safe-area-inset-bottom);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* Barre de progression (remplissage par transform, pas par width) */
+.progress-bar-top {
+    position: fixed;
+    top: 0; left: 0;
+    height: 4px;
+    background: var(--vivid-coral);
+    width: 100%;
+    transform: scaleX(0);
+    transform-origin: left center;
+    z-index: 1000;
+    transition: transform 0.1s linear;
+}
+
+/* Compteur de page */
+.page-counter {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    font-family: var(--font-anton);
+    font-size: 1.2rem;
+    background: var(--ink-black);
+    color: var(--paper);
+    padding: 4px 8px;
+    border: var(--border-thin);
+    z-index: 1000;
+}
+
+/* Utilitaires de style Brutaliste */
+.brutal-border { border: var(--border-thick); }
+.brutal-shadow { box-shadow: var(--shadow-hard); }
+.bg-coral { background-color: var(--vivid-coral); }
+.bg-yellow { background-color: var(--sun-yellow); }
+.bg-turquoise { background-color: var(--bold-turquoise); }
+.bg-paper { background-color: var(--paper); }
+
+.text-anton { font-family: var(--font-anton); text-transform: uppercase; }
+.text-playfair { font-family: var(--font-playfair); font-style: italic; }
+.text-space { font-family: var(--font-space); }
+
+/* Apparitions au scroll (IntersectionObserver) */
+.reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal { transition: none !important; }
+}

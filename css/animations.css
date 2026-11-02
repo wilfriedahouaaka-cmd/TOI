@@ -1,0 +1,47 @@
+/* Animations de transition et effets */
+
+.fade-in {
+    animation: fadeIn 1s ease forwards;
+}
+
+.fade-out {
+    animation: fadeOut 0.8s ease forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-10px); }
+}
+
+/* Animation lettre par lettre / fondu lent */
+.char {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: charAppear 0.5s ease forwards;
+}
+
+@keyframes charAppear {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Animation confettis — éclat plat (lot 2)
+   Les variables --confetti-x / --confetti-y / --confetti-r sont
+   posées par js/scenes.js. On n'anime que transform et opacity. */
+@keyframes confettiFall {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) translate(0, 0) rotate(0deg) scale(0.7);
+    }
+    15% { opacity: 1; }
+    70% { opacity: 1; }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) translate(var(--confetti-x, 0px), var(--confetti-y, 180px)) rotate(var(--confetti-r, 180deg)) scale(1);
+    }
+}

@@ -1,0 +1,732 @@
+/* ============================================================
+   PAGE D'ENTRÉE "SCELLÉE" (Gate)
+   Reproduite depuis la maquette Stitch :
+   docs/../stitch_surprise_birthday_mobile_experience (1)/code.html
+   Design : Néo-Brutaliste Pop Editorial (voir DESIGN.md)
+   - Bordures noires 2-3px, ombres dures SANS flou, aucun dégradé
+   - Fonts : Anton (display), Playfair (citation), Space Grotesk (technique)
+   ============================================================ */
+
+/* --- L'overlay plein écran --- */
+.entry-overview {
+    position: fixed;
+    inset: 0;
+    z-index: 2000; /* au-dessus du compteur (1000) et du magazine */
+    background: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto; /* par sécurité sur très petits écrans */
+    opacity: 1;
+    transition: opacity 0.45s ease;
+}
+
+/* Transition courte de sortie, pilotée par le JS */
+.entry-overview.closing { opacity: 0; }
+.entry-overview.hidden { display: none; }
+
+/* Pendant verrouillage : le magazine en dessous ne doit pas scroller */
+body.entry-lock #main-container { overflow: hidden; }
+/* Le compteur et la barre de progression restent cachés tant que la gate est là */
+body.entry-lock .page-counter,
+body.entry-lock .progress-bar-top { display: none; }
+
+/* --- Colonne centrale (même gabarit que la maquette : max 320px) --- */
+.entry-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 320px;
+    padding: 2rem 1rem;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* --- Le magazine scellé (objet tactile) --- */
+.sealed-magazine {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1.38;
+    background: #f8f3e9;               /* surface-container-low du design system */
+    border: 2.5px solid var(--ink-black);
+    box-shadow: 6px 6px 0 var(--ink-black); /* ombre dure, zéro flou */
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+
+/* Feedback tactile au toucher */
+.sealed-magazine:active { transform: translate(2px, 2px); }
+
+/* Micro-animation de "décachetage" (déclenchée par JS au clic) */
+.sealed-magazine.unsealing { transform: scale(0.97) rotate(1deg); }
+
+/* --- Tranche de reliure (bord gauche) --- */
+.entry-spine {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 20px;
+    background: #ede8de;               /* surface-container-high */
+    border-right: 2px solid var(--ink-black);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    z-index: 2;
+}
+
+/* Point de reliure arrondi + trait vertical (alternés, comme la maquette) */
+.spine-dot {
+    width: 6px; height: 6px;
+    background: var(--ink-black);
+    border-radius: 50%;
+}
+.spine-line {
+    width: 2px; height: 24px;
+    background: var(--ink-black);
+}
+
+/* --- Surface de couverture (avant ou après) --- */
+.entry-cover {
+    position: absolute;
+    inset: 0;
+    left: 20px;                        /* décalée après la tranche */
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    pointer-events: none;              /* la carte entière capte le clic */
+}
+
+/* Bloc haut : tampon archive + sticker série */
+.entry-top {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-start;
+}
+
+/* Tampon "ARCHIVE // CLASSIFIÉ" */
+.entry-badge-archive {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    background: #e7e2d8;               /* surface-container-highest */
+    border: 1.5px solid var(--ink-black);
+}
+
+/* Point corail qui pulse (allumé = Archive active) */
+.entry-dot-pulse {
+    width: 6px; height: 6px;
+    background: #ae3115;               /* secondary du design system */
+    border-radius: 50%;
+    animation: entryPulse 1.4s ease-in-out infinite;
+}
+
+/* Texte technique micro (Space Grotesk 10/12 bold) */
+.entry-text-micro {
+    font-family: var(--font-space);
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-black);
+}
+
+/* Sticker adhésif "N° 001 — ÉDITION NON CATALOGUÉE" */
+.entry-sticker {
+    margin-top: 8px;
+    padding: 6px 10px;
+    background: #ffdf9a;               /* tertiary-fixed du design system */
+    color: #251a00;                    /* on-tertiary-fixed */
+    border: 2px solid var(--ink-black);
+    box-shadow: 2px 2px 0 var(--ink-black);
+    transform: rotate(-1deg);
+    font-family: var(--font-space);
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 14px;
+    letter-spacing: 0.08em;
+    white-space: nowrap;               /* une seule ligne, comme la maquette */
+    max-width: calc(100% + 6px);       /* peut déborder légèrement du bord droit */
+}
+
+/* --- Bloc centre : losange corail + "VOL. PRIVÉ" --- */
+.entry-center {
+    margin: auto 0;
+    padding: 16px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.entry-diamond {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Losange = carré tourné à 45°, bordure nette */
+.entry-diamond-stamp {
+    position: absolute;
+    inset: 0;
+    background: #fd6a49;               /* secondary-container */
+    border: 2px solid var(--ink-black);
+    transform: rotate(45deg);
+}
+
+/* Croix de contraste au centre du losange (SVG inline) */
+.entry-cross {
+    position: relative;
+    z-index: 1;
+    width: 32px;
+    height: 32px;
+    color: #640f00;                    /* on-secondary-container */
+}
+.entry-cross svg { width: 100%; height: 100%; fill: currentColor; display: block; }
+
+.entry-vol {
+    margin-top: 16px;
+    font-family: var(--font-anton);
+    font-size: 28px;
+    line-height: 30px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--ink-black);
+}
+
+/* --- Bloc bas : code-barres + série --- */
+.entry-bottom {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    width: 100%;
+    padding-top: 8px;
+    border-top: 1.5px dashed #747878;  /* outline du design system */
+}
+
+.entry-barcode {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    height: 24px;
+}
+.entry-barcode span {
+    display: block;
+    height: 100%;
+    background: var(--ink-black);
+}
+/* Largeurs des segments (même motif que la maquette) */
+.entry-barcode span:nth-child(1) { width: 4px; }
+.entry-barcode span:nth-child(2) { width: 2px; }
+.entry-barcode span:nth-child(3) { width: 6px; }
+.entry-barcode span:nth-child(4) { width: 2px; }
+.entry-barcode span:nth-child(5) { width: 8px; }
+.entry-barcode span:nth-child(6) { width: 2px; }
+.entry-barcode span:nth-child(7) { width: 4px; }
+.entry-barcode span:nth-child(8) { width: 2px; }
+.entry-barcode span:nth-child(9) { width: 6px; }
+
+.entry-ser {
+    font-family: var(--font-space);
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 12px;
+    letter-spacing: 0.12em;
+    color: #444748;                    /* on-surface-variant */
+}
+
+/* --- Bandeau scellé ( SECURITY RIBBON ) --- */
+.entry-band {
+    position: absolute;
+    left: 0; right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 8px 0;
+    background: var(--ink-black);
+    border-top: 2px solid var(--ink-black);
+    border-bottom: 2px solid var(--ink-black);
+    box-shadow: 0 3px 0 var(--ink-black);
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;                  /* coupe le texte aux bords, comme la maquette */
+}
+
+/* Bande répétée horizontalement, coupée aux extrémités */
+.entry-band-strip {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    white-space: nowrap;
+    color: #ffffff;
+    font-family: var(--font-space);
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+/* Petit losange corail séparateur sur le bandeau */
+.entry-band-diamond {
+    width: 8px;
+    height: 8px;
+    background: #ae3115;
+    transform: rotate(45deg);
+    flex-shrink: 0;
+}
+
+/* --- Cadenas en coin (badge rond) --- */
+.entry-lock-badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 32px;
+    height: 32px;
+    background: #ffdad2;               /* secondary-fixed */
+    border: 2px solid var(--ink-black);
+    border-radius: 50%;
+    box-shadow: 2px 2px 0 var(--ink-black);
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.entry-lock-badge svg { width: 16px; height: 16px; fill: #3d0600; /* on-secondary-fixed */ }
+
+/* --- Callouts éditoriaux sous l'objet --- */
+.entry-callout {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    text-align: center;
+}
+
+/* Citation Playfair italique */
+.entry-quote {
+    font-family: var(--font-playfair);
+    font-style: italic;
+    font-size: 18px;
+    line-height: 26px;
+    color: var(--ink-black);
+}
+
+/* Bouton pill "Toucher pour ouvrir" */
+.entry-open-btn {
+    margin-top: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 12px;
+    background: #f2ede3;               /* surface-container */
+    border: 1px solid var(--ink-black);
+    border-radius: 999px;              /* pill, comme la maquette */
+    cursor: pointer;
+    transition: color 0.15s ease;
+    color: #444748;
+}
+.entry-open-btn:hover { color: var(--ink-black); }
+.entry-open-btn:active { transform: translate(1px, 1px); }
+
+.entry-btn-dot {
+    width: 6px;
+    height: 6px;
+    background: #ae3115;
+    border-radius: 50%;
+    animation: entryPing 1s ease infinite;
+}
+
+/* Libellé correspond à "label-tag" (12px bold uppercase) */
+.entry-btn-label {
+    font-family: var(--font-space);
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-black);
+}
+
+.entry-btn-arrow svg { width: 14px; height: 14px; fill: currentColor; display: block; }
+
+/* --- Animations locales (pulsation + ping) --- */
+@keyframes entryPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.4; transform: scale(0.85); }
+}
+
+@keyframes entryPing {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.3; transform: scale(0.7); }
+}
+
+/* Accessibilité : pas d'animation si l'utilisateur préfère le calme */
+@media (prefers-reduced-motion: reduce) {
+    .entry-dot-pulse,
+    .entry-btn-dot { animation: none; }
+    .sealed-magazine,
+    .entry-overview,
+    .entry-open-btn,
+    .entry-spine { transition: none; }
+}
+
+/* Focus clavier visible (magazine et bouton sont cliquables au clavier) */
+.sealed-magazine:focus-visible,
+.entry-open-btn:focus-visible {
+    outline: 3px solid var(--vivid-coral);
+    outline-offset: 2px;
+}
+
+/* ============================================================
+   QUIZ DU SCEAU (pose 3 questions avant décachetage)
+   Bloc inséré dans .entry-callout, sous la citation.
+   La gate pose le quiz avant le décachetage :
+   - choix juste   -> fond jaune sticker (#ffdf9a)
+   - choix faux    -> fond rose cadenas (#ffdad2) + secousse du magazine
+   - 3 echec       -> voile sombre plein écran + blague
+   ============================================================ */
+
+/* Le bouton pill et le compte à rebours sont pilotés par JS :
+   tant que le quiz tourne, ils sont absents (attribut hidden).
+   On force display:none car la classe définit déjà un display. */
+.entry-open-btn[hidden],
+.entry-countdown[hidden],
+.entry-veil[hidden] {
+    display: none !important;
+}
+
+/* --- Conteneur du quiz --- */
+.entry-quiz {
+    margin-top: 4px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Micro label "QUESTION 1/3" */
+.entry-quiz-progress {
+    font-family: var(--font-space);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #444748;
+    text-align: center;
+}
+
+/* Libellé de la question (Space Grotesk, lisible) */
+.entry-question-label {
+    font-family: var(--font-space);
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 18px;
+    color: var(--ink-black);
+    text-align: center;
+}
+
+/* --- Liste des choix --- */
+.entry-choices {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+/* Bouton de choix : néo-brutaliste (bordure + ombre dure, zéro flou) */
+.entry-choice {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    background: #f2ede3;               /* surface-container, comme le pill */
+    border: 2px solid var(--ink-black);
+    box-shadow: 3px 3px 0 var(--ink-black);
+    cursor: pointer;
+    font-family: var(--font-space);
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 16px;
+    letter-spacing: 0.04em;
+    color: var(--ink-black);
+    text-align: center;
+    transition: transform 0.12s ease, background-color 0.12s ease;
+}
+
+/* Feedback tactile */
+.entry-choice:active { transform: translate(2px, 2px); }
+
+/* Choix correct : jaune sticker */
+.entry-choice.correct {
+    background: #ffdf9a;
+    color: #251a00;
+}
+
+/* Choix faux : rose cadenas + « écrasé » */
+.entry-choice.wrong {
+    background: #ffdad2;
+    color: #3d0600;
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 var(--ink-black);
+}
+
+/* Une fois la réponse jouée, on fige tous les choix (pointer-events none) */
+.entry-choices.locked .entry-choice { pointer-events: none; }
+
+/* Zone des messages (min-height : évite que la mise en page saute) */
+.entry-quiz-feedback {
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: var(--font-playfair);
+    font-style: italic;
+    font-size: 13px;
+    line-height: 18px;
+    color: #444748;
+    padding: 0 8px;
+}
+
+/* --- Cadenas : états fermé / ouvert --- */
+/* Réutilise .entry-lock-badge du magazine : au fur et à mesure des bonnes
+  réponses le badge passe au jaune, puis tourne quand le quiz est terminé. */
+.entry-lock-badge.step { background: #ffdf9a; transition: background-color 0.3s ease; }
+.entry-lock-badge.step svg { fill: #251a00; transition: fill 0.3s ease; }
+
+.entry-lock-badge.open {
+    background: #ffdf9a;
+    transform: rotate(-25deg);
+    transition: transform 0.35s ease, background-color 0.3s ease;
+}
+.entry-lock-badge.open svg { fill: #251a00; }
+
+/* --- Secousse du magazine (mauvaise réponse) --- */
+@keyframes entryQuake {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    20%      { transform: translate(-3px, 0) rotate(-0.6deg); }
+    40%      { transform: translate(3px, 0) rotate(0.6deg); }
+    60%      { transform: translate(-2px, 0) rotate(-0.4deg); }
+    80%      { transform: translate(2px, 0) rotate(0.4deg); }
+}
+.sealed-magazine.quake { animation: entryQuake 0.35s ease; }
+
+/* --- Voile de refus (3 mauvaises réponses) --- */
+.entry-veil {
+    position: absolute;
+    inset: 0;
+    z-index: 30;                       /* au-dessus de tout dans la gate */
+    background: rgba(17, 17, 17, 0.96);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    opacity: 1;
+    transition: opacity 0.35s ease;
+}
+.entry-veil.fading { opacity: 0; }
+
+.entry-veil-text {
+    font-family: var(--font-playfair);
+    font-style: italic;
+    font-size: 17px;
+    line-height: 26px;
+    color: #fef9ef;
+    max-width: 280px;
+}
+
+/* --- Compte à rebours (quiz réussi avant le 30 novembre 2026) --- */
+.entry-countdown {
+    margin-top: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.entry-countdown-title {
+    font-family: var(--font-space);
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 14px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-black);
+}
+
+.entry-countdown-sub {
+    font-family: var(--font-space);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #444748;
+}
+
+/* Grille de 4 blocs : jours / heures / minutes / secondes */
+.countdown-grid {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.countdown-cell {
+    min-width: 56px;
+    padding: 8px 4px;
+    background: #f8f3e9;
+    border: 2px solid var(--ink-black);
+    box-shadow: 3px 3px 0 var(--ink-black);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.countdown-cell .digit {
+    font-family: var(--font-anton);
+    font-size: 22px;
+    line-height: 24px;
+    color: var(--ink-black);
+}
+
+.countdown-cell .unit {
+    font-family: var(--font-space);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #444748;
+}
+
+.entry-countdown-legende {
+    font-family: var(--font-playfair);
+    font-style: italic;
+    font-size: 13px;
+    line-height: 18px;
+    color: #444748;
+    text-align: center;
+}
+
+/* ============================================================
+   PAGE INTERMÉDIAIRE (après ouverture du magazine, avant le site)
+   La note de l'éditeur : "J'ai confectionné cette idée pour toi…"
+   Séquence : la page se soulève (effet page qui se tourne),
+   les lignes apparaissent une à une, bouton Continuer, bascule.
+   ============================================================ */
+
+/* Overlay plein écran, SOUS la gate (z-index 1500 < 2000) :
+   la gate se referme, puis cette page prend le relais. */
+.entry-intro {
+    position: fixed;
+    inset: 0;
+    z-index: 1500;
+    background: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    opacity: 1;
+    transition: opacity 0.45s ease;
+}
+
+.entry-intro[hidden] { display: none !important; }
+.entry-intro.fading { opacity: 0; }
+
+/* La "page" du magazine qui se soulève */
+.intro-page {
+    position: relative;
+    max-width: 320px;
+    width: 100%;
+    background: #f8f3e9;
+    border: 2.5px solid var(--ink-black);
+    box-shadow: 6px 6px 0 var(--ink-black);
+    padding: 36px 22px 28px;
+    text-align: center;
+}
+
+/* Effet "page qui se soulève" : légère rotation 3D, ancrée en bas */
+.intro-page.lift {
+    animation: introLift 0.8s ease both;
+    transform-origin: bottom center;
+}
+
+@keyframes introLift {
+    0%   { transform: perspective(900px) rotateX(18deg) translateY(26px); opacity: 0; }
+    55%  { opacity: 1; }
+    100% { transform: perspective(900px) rotateX(0deg) translateY(0); opacity: 1; }
+}
+
+/* Sticker adhésif "NOTE DE L'ÉDITEUR" en haut de la page */
+.intro-note-label {
+    position: absolute;
+    top: -14px;
+    left: 14px;
+    padding: 5px 10px;
+    background: #ffdf9a;
+    color: #251a00;
+    border: 2px solid var(--ink-black);
+    box-shadow: 2px 2px 0 var(--ink-black);
+    transform: rotate(-1.5deg);
+    font-family: var(--font-space);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+/* Lignes de la note : apparaissent une à une (classe .visible ajoutée par JS) */
+.intro-line {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    font-family: var(--font-playfair);
+    font-style: italic;
+    font-size: 19px;
+    line-height: 30px;
+    color: var(--ink-black);
+    margin: 0 0 10px;
+}
+
+.intro-signature {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    font-family: var(--font-playfair);
+    font-style: italic;
+    font-size: 17px;
+    line-height: 24px;
+    color: #444748;
+    margin: 18px 0 0;
+}
+
+.intro-line.visible,
+.intro-signature.visible {
+    opacity: 1;
+    transform: none;
+}
+
+/* Bouton Continuer : réutilise le style du pill de la gate */
+.intro-page .entry-open-btn {
+    margin-top: 22px;
+}
+
+/* Toute la page intermédiaire est cliquable (tap = continuer) */
+.entry-intro { cursor: pointer; }
+.entry-intro .intro-page { cursor: default; }
+
+/* Accessibilité : sans animations si l'utilisateur préfère le calme */
+@media (prefers-reduced-motion: reduce) {
+    .intro-page.lift { animation: none; }
+    .intro-line,
+    .intro-signature { transition: none; }
+}

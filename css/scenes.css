@@ -1,0 +1,1296 @@
+/* --- PAGE 0 : Couverture --- */
+.cover-page {
+    background-color: var(--paper);
+    color: var(--ink-black);
+    text-align: center;
+}
+
+.masthead {
+    font-family: var(--font-anton);
+    font-size: clamp(4rem, 15vw, 8rem);
+    line-height: 0.9;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.edition-tag {
+    font-family: var(--font-space);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 1rem;
+    background: var(--sun-yellow);
+    display: inline-block;
+    padding: 2px 10px;
+    border: var(--border-thin);
+    box-shadow: var(--shadow-small);
+    margin-bottom: 2rem;
+}
+
+.cover-subtitle {
+    font-family: var(--font-playfair);
+    font-style: italic;
+    font-size: 1.2rem;
+    margin-bottom: 3rem;
+}
+
+.cover-frame {
+    width: 220px;
+    height: 300px;
+    border: var(--border-thick);
+    background: var(--surface-dim);
+    margin: 0 auto 3rem;
+    position: relative;
+    box-shadow: var(--shadow-hard);
+    overflow: hidden;
+}
+
+.cover-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.barcode {
+    width: 100px;
+    height: 30px;
+    background: repeating-linear-gradient(
+        90deg,
+        var(--ink-black, #000) 0px,
+        var(--ink-black, #000) 2px,
+        var(--paper, #fff) 3px,
+        var(--paper, #fff) 4px
+    );
+    margin: 0 auto 2rem;
+}
+
+.start-pill {
+    background: var(--vivid-coral);
+    color: white;
+    border: var(--border-thin);
+    padding: 12px 24px;
+    font-family: var(--font-space);
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: var(--shadow-hard);
+    transition: all 0.1s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.start-pill:active {
+    transform: translate(2px, 2px);
+    box-shadow: var(--shadow-small);
+}
+
+.scroll-hint {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-space);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    opacity: 0.7;
+}
+
+.scroll-arrow {
+    display: block;
+    width: 20px;
+    height: 20px;
+    margin: 10px auto 0;
+    border-bottom: 3px solid var(--ink-black);
+    border-right: 3px solid var(--ink-black);
+    transform: rotate(45deg);
+    animation: scrollBounce 2s infinite;
+}
+
+@keyframes scrollBounce {
+    0%, 100% { transform: rotate(45deg) translate(0, 0); }
+    50% { transform: rotate(45deg) translate(5px, 5px); }
+}
+
+/* --- PAGE 1 : Révélation --- */
+.reveal-page {
+    background-color: var(--vivid-coral);
+    color: var(--paper);
+    overflow: hidden;
+}
+
+.reveal-text-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+}
+
+.reveal-bday {
+    font-family: var(--font-anton);
+    font-size: clamp(2rem, 8vw, 4rem);
+    text-transform: uppercase;
+    color: var(--paper);
+    line-height: 1;
+    text-align: center;
+}
+
+.reveal-name {
+    font-family: var(--font-anton);
+    font-size: clamp(4rem, 20vw, 10rem);
+    text-transform: uppercase;
+    color: var(--sun-yellow);
+    line-height: 0.8;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.confetti {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background: var(--sun-yellow);
+    pointer-events: none;
+}
+
+/* --- PAGE 2 : Édito --- */
+.edito-page {
+    background-color: var(--paper);
+    padding: 2rem;
+}
+
+.edito-label {
+    display: inline-block;
+    background: var(--ink-black);
+    color: var(--paper);
+    font-family: var(--font-space);
+    font-weight: 700;
+    padding: 4px 12px;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+}
+
+.edito-content {
+    font-family: var(--font-playfair);
+    font-style: italic;
+    font-size: 1.4rem;
+    line-height: 1.6;
+    text-align: left;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.dropcap {
+    float: left;
+    font-family: var(--font-anton);
+    font-size: 4rem;
+    line-height: 1;
+    margin-right: 8px;
+    color: var(--vivid-coral);
+    text-transform: uppercase;
+}
+
+/* Footer commun */
+.page-footer {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    text-align: right;
+}
+
+.next-hint {
+    font-family: var(--font-space);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.next-arrow {
+    width: 20px;
+    height: 20px;
+    border-bottom: 3px solid var(--ink-black);
+    border-right: 3px solid var(--ink-black);
+    transform: rotate(45deg);
+}
+
+/* --- PAGE 3 : Le Dossier (A) --- */
+.dossier-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 2rem;
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+}
+
+.brutal-polaroid {
+    background: var(--paper);
+    border: var(--border-thin);
+    box-shadow: var(--shadow-hard);
+    padding: 10px 10px 40px 10px;
+    position: relative;
+    transition: transform 0.3s ease;
+}
+
+.brutal-polaroid img {
+    width: 100%;
+    aspect-ratio: 4/5;
+    object-fit: cover;
+    border: var(--border-thin);
+}
+
+.brutal-caption {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-family: var(--font-playfair);
+    font-style: italic;
+    font-size: 1rem;
+}
+
+.washi-tape {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-2deg);
+    width: 80px;
+    height: 25px;
+    background: var(--sun-yellow);
+    border: var(--border-thin);
+    opacity: 0.9;
+    z-index: 2;
+}
+
+/* --- PAGE 4 : Tri-pli (B) --- */
+.tripli-container {
+    display: flex;
+    width: 100%;
+    max-width: 800px;
+    height: 80%;
+    border: var(--border-thick);
+    background: var(--paper);
+    box-shadow: var(--shadow-hard);
+}
+
+.tripli-panel {
+    flex: 1;
+    border-right: var(--border-thin);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+}
+
+.tripli-panel:last-child { border-right: none; }
+
+.tripli-panel img {
+    width: 100%;
+    aspect-ratio: 4/5;
+    object-fit: cover;
+    border: var(--border-thin);
+    margin-bottom: 1rem;
+}
+
+.tripli-caption {
+    font-family: var(--font-playfair);
+    font-style: italic;
+    text-align: center;
+}
+
+/* Plis visuels */
+.tripli-fold {
+    position: absolute;
+    top: 0;
+    width: 15px;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0,0,0,0.05), transparent);
+    pointer-events: none;
+}
+.fold-1 { left: 33.3%; }
+.fold-2 { left: 66.6%; }
+
+/* --- PAGE 5 : Pleine Page (C) --- */
+.full-page-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0; left: 0;
+    z-index: -1;
+}
+
+.full-page-overlay {
+    position: absolute;
+    bottom: 10%;
+    right: 5%;
+    max-width: 300px;
+}
+
+.quote-block {
+    background: var(--sun-yellow);
+    border: var(--border-thick);
+    box-shadow: var(--shadow-hard);
+    padding: 20px;
+    font-family: var(--font-playfair);
+    font-style: italic;
+    font-size: 2rem;
+    text-align: center;
+    line-height: 1.2;
+}
+
+/* ============================================================
+   PAGES 6 À 10 — ÉTAPES D, E, F
+   ============================================================ */
+
+/* --- PAGE 6 : Ses Goûts --- */
+.gouts-page {
+    background-color: var(--paper);
+    color: var(--ink-black);
+    padding: 2rem;
+    /* Le contenu (2 cartes + étagère de disquettes) peut dépasser
+       100dvh sur les petits écrans : on autorise la page à s'étendre
+       au lieu de couper (override du overflow:hidden global). */
+    overflow: visible;
+}
+
+.gout-card {
+    background: var(--paper);
+    margin-bottom: 1.5rem;
+    padding: 1.25rem;
+    position: relative;
+}
+
+.gout-card.bg-yellow {
+    background: var(--sun-yellow);
+}
+
+.gout-card-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.gout-tag {
+    font-family: var(--font-anton);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    background: var(--ink-black);
+    color: var(--paper);
+    padding: 2px 8px;
+    display: inline-block;
+    width: fit-content;
+}
+
+.gout-card.bg-yellow .gout-tag {
+    background: var(--ink-black);
+    color: var(--sun-yellow);
+}
+
+.gout-title {
+    font-family: var(--font-anton);
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
+    line-height: 1.1;
+    text-transform: uppercase;
+}
+
+.gout-card-content {
+    font-family: var(--font-playfair);
+    font-style: italic;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.gout-character,
+.gout-description {
+    opacity: 0.9;
+}
+
+/* Photo d'univers dans la carte (anime / série) */
+.gout-photo {
+    float: right;
+    width: 92px;
+    height: 118px;
+    border: var(--border-thin);
+    box-shadow: var(--shadow-hard);
+    overflow: hidden;
+    background: var(--surface-dim);
+    margin: 0 0 0.6rem 0.8rem;
+}
+
+.gout-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* ============================================================
+   PAGE 6 — LES DISQUETTES (« DANS SES OREILLES »)
+   Vinyles néo-brutalistes ; tous libres dès le départ ;
+   une seule lecture à la fois ; re-tap = pause / reprise ;
+   fine barre de progression sur le disque en cours ;
+   le BONUS se révèle quand tous les artistes sont écoutés.
+   ============================================================ */
+.disquettes-block {
+    margin-top: 1rem;
+}
+
+.disquette-shelf-label {
+    margin-bottom: 0.5rem;
+}
+
+.disquette-consigne {
+    font-size: 0.95rem;
+    opacity: 0.7;
+    margin-bottom: 1rem;
+    max-width: 420px;
+}
+
+/* Étagère : rangée de disquettes */
+.disquettes-shelf {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 1rem;
+}
+
+/* Une disquette = un vrai <button> rond-rectangulaire avec son disque */
+.disquette {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 14px 8px 12px;
+    background: var(--paper);
+    border: var(--border-thick);
+    box-shadow: var(--shadow-hard);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.disquette:active {
+    transform: translate(2px, 2px);
+    box-shadow: var(--shadow-small);
+}
+
+/* Le vinyle : disque noir plein, rotation pendant la lecture */
+.disquette-disc {
+    position: relative;
+    width: 104px;
+    height: 104px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--ink-black) 0%, var(--ink-black) 62%, var(--surface-dim) 63%, var(--ink-black) 64%, var(--ink-black) 100%);
+    border: var(--border-thin);
+    box-shadow: var(--shadow-small);
+}
+
+.disquette.on-air .disquette-disc {
+    animation: disquetteSpin 2.4s linear infinite;
+}
+
+@keyframes disquetteSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Étiquette du disque : la photo de l'artiste (ronde, au centre) */
+.disquette-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 54%;
+    height: 54%;
+    border-radius: 50%;
+    overflow: hidden;
+    border: var(--border-thin);
+    background: var(--surface-dim);
+}
+
+/* La rotation est portée par l'étiquette quand pas de photo :
+   le sans-image du bonus doit tourner aussi */
+.disquette.on-air .disquette-label {
+    animation: disquetteSpin 2.4s linear infinite;
+}
+
+.disquette-label img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Trou central + indentation du disque */
+.disquette-hole {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 2px solid var(--ink-black);
+    z-index: 2;
+}
+
+/* Texte sous le disque */
+.disquette-nom {
+    font-family: var(--font-anton);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    line-height: 1.1;
+    text-align: center;
+}
+
+.disquette-titre {
+    font-family: var(--font-playfair);
+    font-style: italic;
+    font-size: 0.8rem;
+    opacity: 0.7;
+    text-align: center;
+}
+
+/* Pendant la lecture : badge corail au-dessus */
+.disquette-badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-3deg);
+    background: var(--vivid-coral);
+    color: var(--paper);
+    border: var(--border-thin);
+    padding: 2px 10px;
+    font-family: var(--font-space);
+    font-weight: 700;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    white-space: nowrap;
+    z-index: 3;
+    display: none;
+}
+
+/* Le badge suit le disque en cours : « ON AIR » ou « PAUSE » */
+.disquette.is-current .disquette-badge {
+    display: block;
+}
+
+.disquette.en-pause .disquette-badge {
+    background: var(--ink-black);
+    color: var(--paper);
+}
+
+/* Fine barre de progression, collée au bas du disque en cours */
+.disquette-progress {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 4px;
+    background: var(--surface-dim);
+    overflow: hidden;
+    display: none;
+    pointer-events: none;
+}
+
+.disquette.is-current .disquette-progress {
+    display: block;
+}
+
+.disquette-progress-fill {
+    display: block;
+    height: 100%;
+    width: 0%;
+    background: var(--vivid-coral);
+    transition: width 0.2s linear;
+}
+
+/* Trace : sticker « ÉCOUTÉ » collé en travers du disque */
+.disquette-sticker-ecoute {
+    position: absolute;
+    top: 34px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-6deg);
+    background: var(--sun-yellow);
+    color: var(--ink-black);
+    border: var(--border-thin);
+    padding: 2px 10px;
+    font-family: var(--font-space);
+    font-weight: 700;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    z-index: 3;
+    pointer-events: none;
+}
+
+/* Message d'erreur : son manquant (compte comme écouté, ne bloque rien) */
+.disquette-son-manquant {
+    font-family: var(--font-space);
+    font-weight: 700;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    color: var(--vivid-coral);
+    text-align: center;
+}
+
+/* Apparition d'une disquette (révélation du bonus) */
+.disquette.apparait {
+    animation: disquettePop 0.45s ease;
+}
+
+@keyframes disquettePop {
+    0% { transform: scale(0.85) translateY(10px); opacity: 0; }
+    70% { transform: scale(1.04) translateY(0); opacity: 1; }
+    100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+/* Le bonus reste hors de l'étagère tant que les artistes ne sont pas écoutés */
+.disquette.est-cache {
+    display: none;
+}
+
+/* Disquette BONUS : label corail avec « BONUS » écrit dessus */
+.disquette.bonus .disquette-label {
+    background: var(--vivid-coral);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.disquette.bonus .disquette-label-texte {
+    font-family: var(--font-anton);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: var(--paper);
+    text-transform: uppercase;
+}
+
+.disquette.bonus .disquette-disc {
+    border-color: var(--vivid-coral);
+}
+
+/* Message de révélation du bonus */
+.bonus-note {
+    margin-top: 1rem;
+    background: var(--sun-yellow);
+    border: var(--border-thin);
+    box-shadow: var(--shadow-hard);
+    padding: 0.8rem 1rem;
+    font-size: 1.05rem;
+    max-width: 420px;
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    opacity: 0;
+    transform: translateY(8px);
+}
+
+.bonus-note.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Trace de progression : points sous l'étagère */
+.disquette-trace {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 1.2rem;
+}
+
+.trace-dot {
+    width: 14px;
+    height: 14px;
+    border: var(--border-thin);
+    background: var(--paper);
+}
+.trace-dot.ecoute {
+    background: var(--vivid-coral);
+}
+
+.trace-dot.bonus-dot {
+    background: var(--ink-black);
+}
+
+.trace-dot.bonus-dot.ecoute {
+    background: var(--gold, var(--sun-yellow));
+}
+
+.trace-label {
+    font-family: var(--font-space);
+    font-weight: 700;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    opacity: 0.6;
+}
+
+/* --- PAGE 7 : Elle se décrit --- */
+.mots-page {
+    background-color: var(--paper);
+    color: var(--ink-black);
+    padding: 2rem;
+}
+
+.mots-intro {
+    margin-bottom: 2rem;
+}
+
+.mots-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.mot-block {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1.5rem;
+    text-align: center;
+    position: relative;
+    border: var(--border-thick);
+    box-shadow: var(--shadow-hard);
+}
+
+.mot-block:nth-child(1) { background: var(--vivid-coral); color: var(--paper); }
+.mot-block:nth-child(2) { background: var(--sun-yellow); color: var(--ink-black); }
+.mot-block:nth-child(3) { background: var(--bold-turquoise); color: var(--paper); }
+
+.mot-word {
+    font-family: var(--font-anton);
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
+    text-transform: uppercase;
+    line-height: 1.1;
+    word-break: break-word;
+}
+
+.mots-signature {
+    margin-top: 2rem;
+}
+
+/* --- PAGE 8 : Ils parlent de toi --- */
+.amis-page {
+    background-color: var(--paper);
+    color: var(--ink-black);
+    padding: 2rem;
+}
+
+.amis-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.ami-card {
+    background: var(--paper);
+    border: var(--border-thick);
+    box-shadow: var(--shadow-hard);
+    padding: 1.5rem;
+    position: relative;
+}
+
+.ami-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.ami-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: var(--border-thick);
+    background: var(--sun-yellow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-anton);
+    font-size: 1.5rem;
+    color: var(--ink-black);
+    flex-shrink: 0;
+    box-shadow: var(--shadow-small);
+}
+
+.ami-name {
+    font-family: var(--font-anton);
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    line-height: 1.2;
+}
+
+.ami-message {
+    font-family: var(--font-playfair);
+    font-style: italic;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-bottom: 1rem;
+}
+
+.ami-audio-player {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-top: 1rem;
+    border-top: 2px solid var(--ink-black);
+}
+
+.ami-audio-btn {
+    background: var(--vivid-coral);
+    color: var(--paper);
+    border: var(--border-thin);
+    padding: 8px 16px;
+    font-family: var(--font-space);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    cursor: pointer;
+    box-shadow: var(--shadow-hard);
+    transition: all 0.1s ease;
+}
+
+.ami-audio-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: var(--shadow-small);
+}
+
+.ami-audio-btn.playing {
+    background: var(--ink-black);
+}
+
+.ami-progress {
+    flex: 1;
+    height: 6px;
+    background: var(--surface-dim);
+    border: var(--border-thin);
+    overflow: hidden;
+}
+
+.ami-progress-bar {
+    height: 100%;
+    background: var(--vivid-coral);
+    width: 0%;
+    transition: width 0.1s linear;
+}
+
+/* Mots surlignés synchronisés */
+.ami-message .highlight {
+    background: var(--sun-yellow);
+    padding: 0 2px;
+    border-radius: 0;
+}
+
+/* --- PAGE 9 : En Vidéo ---
+   Vignettes cliquables, AUCUNE lecture automatique.
+   Tap sur une vignette -> fenêtre modale (lecteur avec le son). */
+.videos-page {
+    background-color: var(--paper);
+    color: var(--ink-black);
+    padding: 2rem;
+}
+
+.videos-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+    width: 100%;
+}
+
+/* La vignette : un vrai <button> — contour noir, ombre dure, ruban */
+.video-vignette {
+    position: relative;
+    display: block;
+    padding: 0;
+    border: var(--border-thick);
+    box-shadow: var(--shadow-hard);
+    background: var(--ink-black);
+    cursor: pointer;
+    overflow: visible; /* le ruban dépasse du cadre */
+    -webkit-tap-highlight-color: transparent;
+}
+
+.video-vignette.landscape {
+    width: 100%;
+    aspect-ratio: 16/9;
+}
+
+.video-vignette.portrait {
+    width: 62%;
+    max-width: 300px;
+    aspect-ratio: 9/16;
+}
+
+.video-vignette:active {
+    transform: translate(3px, 3px);
+    box-shadow: var(--shadow-small);
+}
+
+/* L'inclinaison des paysages (style maquette).
+   Nota : avec .reveal (base.css), cette rotation reste appliquée
+   une fois la vignette "visible" (portage du code d'avant). */
+.video-vignette.tilted { transform: rotate(-2deg); }
+.video-vignette.tilted:active { transform: rotate(-2deg) translate(3px, 3px); }
+
+/* Aperçu de la vidéo : SERT D'IMAGE UNIQUEMENT.
+   object-fit: contain = jamais déformé ni recadré. */
+.video-vignette video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    pointer-events: none; /* le tap passe au bouton vignette */
+}
+
+/* Ruban adhésif (paysages, même style que les polaroïds) */
+.video-tape {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-3deg);
+    width: 120px;
+    height: 30px;
+    background: var(--sun-yellow);
+    border: var(--border-thin);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-space);
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* Gros bouton rond "▶" au centre (décoratif : la vignette est le bouton) */
+.video-play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--vivid-coral);
+    color: var(--paper);
+    border: var(--border-thin);
+    box-shadow: var(--shadow-hard);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    line-height: 1;
+    z-index: 3;
+    pointer-events: none;
+}
+
+/* Appel "Touche pour lancer" sous le bouton rond */
+.video-play-cue {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--sun-yellow);
+    border: var(--border-thin);
+    padding: 4px 10px;
+    font-family: var(--font-space);
+    font-weight: 700;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    white-space: nowrap;
+    z-index: 3;
+    pointer-events: none;
+}
+
+/* --- FENÊTRE MODALE DU LECTEUR VIDÉO ---
+   Fond sombre semi-transparent, vidéo unique réutilisée,
+   taille max 92vw x 82dvh en gardant le ratio de la vidéo. */
+.video-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.video-modal[hidden] { display: none; }
+
+.video-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75); /* fond sombre semi-transparent */
+    border: none;
+}
+
+.video-modal-box {
+    position: relative;
+    max-width: 92vw;
+    max-height: 82dvh;
+    border: var(--border-thick);
+    box-shadow: var(--shadow-hard);
+    background: var(--ink-black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.video-modal-box video {
+    display: block;
+    /* Ratio préservé : le navigateur limite à ces maxima sans déformer */
+    max-width: 92vw;
+    max-height: 82dvh;
+    width: auto;
+    height: auto;
+}
+
+/* Bouton ✕ : au moins 44 px (cible tactile), en haut à droite */
+.video-modal-close {
+    position: absolute;
+    top: -14px;
+    right: -14px;
+    width: 48px;
+    height: 48px;
+    min-width: 44px;
+    min-height: 44px;
+    background: var(--vivid-coral);
+    color: var(--paper);
+    border: var(--border-thin);
+    box-shadow: var(--shadow-hard);
+    font-family: var(--font-space);
+    font-weight: 700;
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.video-modal-close:active {
+    transform: translate(2px, 2px);
+    box-shadow: var(--shadow-small);
+}
+
+/* Message d'erreur si la vidéo ne charge pas (pas de plantage) */
+.video-modal-error[hidden] { display: none; }
+
+.video-modal-error {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ink-black);
+    color: var(--paper);
+    font-family: var(--font-space);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    z-index: 3;
+}
+
+/* Blocage du défilement pendant la fenêtre ouverte
+   (le magazine scrolle dans #main-container) */
+body.video-modal-open #main-container { overflow: hidden; }
+body.video-modal-open { overflow: hidden; }
+
+/* prefers-reduced-motion : aucune animation d'ouverture */
+@media (prefers-reduced-motion: reduce) {
+    .video-modal,
+    .video-modal-box,
+    .video-modal-backdrop {
+        transition: none !important;
+        animation: none !important;
+    }
+    .video-vignette { transform: none !important; }
+    .video-vignette:active { transform: translate(3px, 3px) !important; }
+    /* Page 6 : pas de rotation de disquettes, apparitions instantanées */
+    .disquette.on-air .disquette-disc,
+    .disquette.on-air .disquette-label { animation: none !important; }
+    .disquette.apparait { animation: none !important; }
+    .disquette-progress-fill { transition: none !important; }
+    .bonus-note { transition: none !important; transform: none !important; }
+}
+
+/* --- PAGE 10 : Quatrième de Couverture --- */
+.back-cover-page {
+    background-color: var(--bold-turquoise);
+    color: var(--paper);
+    padding: 2rem;
+}
+
+.cake-container {
+    margin-bottom: 1rem;
+    touch-action: manipulation;
+}
+
+.cake-svg {
+    display: block;
+}
+
+.cake-svg .candle {
+    transition: transform 0.3s ease;
+}
+
+.cake-svg .candle.extinguished {
+    transform: translateY(10px);
+}
+
+.cake-svg .flame {
+    transform-origin: center bottom;
+    animation: flameFlicker 0.5s ease-in-out infinite alternate;
+}
+
+.cake-svg .flame.extinguished {
+    animation: none;
+    opacity: 0;
+    transform: scaleY(0);
+}
+
+.cake-svg .smoke {
+    transform-origin: center top;
+    animation: smokeRise 1s ease-out forwards;
+}
+
+@keyframes flameFlicker {
+    0% { transform: scaleY(1) translateX(-1px); }
+    100% { transform: scaleY(1.1) translateX(1px); }
+}
+
+@keyframes smokeRise {
+    0% { opacity: 0.8; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-30px) scale(1.5); }
+}
+
+.back-cover-text {
+    font-family: var(--font-playfair);
+    font-style: italic;
+    font-size: 1.3rem;
+    line-height: 2;
+    text-align: center;
+}
+
+.back-line {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.back-line.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.back-line.signature {
+    font-family: var(--font-anton);
+    font-style: normal;
+    font-size: 1.1rem;
+    margin-top: 1rem;
+    color: var(--sun-yellow);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.back-cover-actions {
+    width: 100%;
+    max-width: 300px;
+    margin: 2rem auto 0;
+}
+
+.btn-primary {
+    background: var(--sun-yellow);
+    color: var(--ink-black);
+    border: var(--border-thin);
+    padding: 14px 28px;
+    font-family: var(--font-space);
+    font-weight: 700;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    box-shadow: var(--shadow-hard);
+    transition: all 0.1s ease;
+    width: 100%;
+}
+
+.btn-primary:active {
+    transform: translate(2px, 2px);
+    box-shadow: var(--shadow-small);
+}
+
+.btn-secondary {
+    background: var(--paper);
+    color: var(--ink-black);
+    border: var(--border-thin);
+    padding: 14px 28px;
+    font-family: var(--font-space);
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: var(--shadow-hard);
+    transition: all 0.1s ease;
+    width: 100%;
+}
+
+.btn-secondary:active {
+    transform: translate(2px, 2px);
+    box-shadow: var(--shadow-small);
+}
+
+/* Responsive ajustements */
+@media (max-width: 480px) {
+    .mots-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+    .mot-block {
+        aspect-ratio: 4/1;
+    }
+    .tripli-container {
+        flex-direction: column;
+        height: auto;
+        min-height: 80%;
+    }
+    .tripli-panel {
+        border-right: none;
+        border-bottom: var(--border-thin);
+        min-height: 200px;
+    }
+    .tripli-panel:last-child { border-bottom: none; }
+    .tripli-fold {
+        display: none;
+    }
+    .video-vignette.tilted {
+        transform: none;
+    }
+    .video-vignette.tilted:active {
+        transform: translate(3px, 3px);
+    }
+    /* Disquettes : étagère plus compacte sur petits écrans */
+    .disquette-disc {
+        width: 92px;
+        height: 92px;
+    }
+    .disquettes-shelf {
+        justify-content: center;
+        gap: 0.75rem;
+    }
+    .gout-photo {
+        width: 80px;
+        height: 104px;
+    }
+}

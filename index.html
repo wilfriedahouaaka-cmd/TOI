@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Pour toi</title>
+    <meta name="robots" content="noindex">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Playfair+Display:ital@1&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/scenes.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <!-- Page d'entrée scellée (gate avant la couverture) -->
+    <link rel="stylesheet" href="css/entry.css">
+    <!-- Pack d'effets (feuilles empilées, bandeaux, barre colorée) -->
+    <link rel="stylesheet" href="css/effets.css">
+
+    <script src="js/config.js" defer></script>
+    <script src="js/audio.js" defer></script>
+    <script src="js/scenes.js" defer></script>
+    <script src="js/effets.js" defer></script>
+    <script src="js/main.js" defer></script>
+</head>
+<body class="entry-lock">
+
+    <!-- Barre de progression globale (cachée tant que la gate est active) -->
+    <div id="global-progress" class="progress-bar-top"></div>
+
+    <main id="main-container">
+        <!-- Page 0 : Couverture -->
+        <section id="page-0" class="page cover-page">
+            <div class="reveal" style="display: flex; flex-direction: column; align-items: center;">
+                <div class="edition-tag">Édition spéciale</div>
+                <h1 class="masthead text-anton">CHIOMA</h1>
+                <p class="cover-subtitle text-playfair">Un exemplaire, rien que pour toi</p>
+
+                <div class="cover-frame brutal-border brutal-shadow">
+                    <img src="assets/photos/p1.jpeg" alt="Cover">
+                </div>
+
+                <div class="barcode"></div>
+
+                <div class="start-pill" id="btn-start-audio">
+                    <span>Touche pour commencer (avec le son)</span>
+                </div>
+
+                <div class="scroll-hint">
+                    Fais défiler ↓
+                    <div class="scroll-arrow"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Page 1 : Révélation -->
+        <section id="page-1" class="page reveal-page">
+            <div class="reveal reveal-text-container">
+                <div class="reveal-bday">JOYEUX ANNIVERSAIRE</div>
+                <div class="reveal-name">CHIOMA</div>
+            </div>
+            <div class="page-footer">
+                <div class="next-hint">SUIVANT : L'ÉDITO <div class="next-arrow"></div></div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             BANDEAU DÉFILANT — entre la RÉVÉLATION et l'ÉDITO
+             Élément décoratif : PAS une page. Exclu du compteur, des
+             « SUIVANT », de l'IntersectionObserver et du scroll-snap.
+             Affiché par js/effets.js si AppConfig.EFFETS.bandeaux.
+             ============================================================ -->
+        <div class="bandeau-defilant" aria-hidden="true" hidden>
+            <div class="bandeau-track">
+                <span class="bandeau-groupe">CHIOMA • ÉDITION SPÉCIALE • CHIOMA • ÉDITION SPÉCIALE • CHIOMA • ÉDITION SPÉCIALE • CHIOMA • ÉDITION SPÉCIALE • CHIOMA • ÉDITION SPÉCIALE • CHIOMA • ÉDITION SPÉCIALE •</span>
+                <span class="bandeau-groupe">CHIOMA • ÉDITION SPÉCIALE • CHIOMA • ÉDITION SPÉCIALE • CHIOMA • ÉDITION SPÉCIALE • CHIOMA • ÉDITION SPÉCIALE • CHIOMA • ÉDITION SPÉCIALE • CHIOMA • ÉDITION SPÉCIALE •</span>
+            </div>
+        </div>
+
+        <!-- Page 2 : Édito -->
+        <section id="page-2" class="page edito-page">
+            <div class="reveal" style="width: 100%; max-width: 500px;">
+                <div class="edito-label">L'ÉDITO</div>
+                <div class="edito-content">
+                    <span class="dropcap">I</span>l y a des personnes qu'on connaît à peine,<br>
+                    et pourtant, quelque chose passe.<br>
+                    Une présence. Une énergie. Une façon d'être là.<br>
+                    Ce soir, je voulais juste te le dire autrement.
+                </div>
+            </div>
+            <div class="page-footer">
+                <div class="next-hint">SUIVANT : LE DOSSIER <div class="next-arrow"></div></div>
+            </div>
+        </section>
+
+        <!-- Page 3 : Le Dossier (A) -->
+        <section id="page-3" class="page">
+            <div class="reveal" style="width: 100%; max-width: 600px; text-align: center; margin-bottom: 100px;">
+                <div class="edito-label">LE DOSSIER</div>
+                <div class="dossier-grid" id="dossier-a">
+                    <!-- Injecté par JS -->
+                </div>
+            </div>
+            <div class="page-footer">
+                <div class="next-hint">SUIVANT : TRI-PLI <div class="next-arrow"></div></div>
+            </div>
+        </section>
+
+        <!-- Page 4 : Tri-pli (B) -->
+        <section id="page-4" class="page">
+            <div class="reveal" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+                <div class="edito-label">TRI-PLI</div>
+                <div class="tripli-container" id="tripli-b">
+                    <!-- Injecté par JS -->
+                </div>
+            </div>
+            <div class="page-footer">
+                <div class="next-hint">SUIVANT : PLEINE PAGE <div class="next-arrow"></div></div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             BANDEAU DÉFILANT — entre le TRI-PLI et la PLEINE PAGE
+             Même principe : décoratif, jamais compté comme une page.
+             ============================================================ -->
+        <div class="bandeau-defilant" aria-hidden="true" hidden>
+            <div class="bandeau-track">
+                <span class="bandeau-groupe">CHIOMA • ÉDITION SPÉCIALE • CHIOMA • ÉDITION SPÉCIALE • CHIOMA • ÉDITION SPÉCIALE • CHIOMA • ÉDITION SPÉCIALE • CHIOMA • ÉDITION SPÉCIALE • CHIOMA • ÉDITION SPÉCIALE •</span>
+                <span class="bandeau-groupe">CHIOMA • ÉDITION SPÉCIALE • CHIOMA • ÉDITION SPÉCIALE • CHIOMA • ÉDITION SPÉCIALE • CHIOMA • ÉDITION SPÉCIALE • CHIOMA • ÉDITION SPÉCIALE • CHIOMA • ÉDITION SPÉCIALE •</span>
+            </div>
+        </div>
+
+        <!-- Page 5 : Pleine Page (C) -->
+        <section id="page-5" class="page">
+            <div class="reveal" style="width: 100%; height: 100%; position: relative;">
+                <img src="assets/photos/p3.jpeg" class="full-page-photo" alt="Pleine page">
+                <div class="full-page-overlay">
+                    <div class="quote-block">
+                        Toi, simplement.
+                    </div>
+                </div>
+            </div>
+            <div class="page-footer">
+                <div class="next-hint">SUIVANT : SES GOÛTS <div class="next-arrow"></div></div>
+            </div>
+        </section>
+
+        <!-- Page 6 : Ses Goûts -->
+        <section id="page-6" class="page gouts-page">
+            <div class="reveal" style="width: 100%; max-width: 600px;">
+                <div class="edito-label">DANS SON MONDE</div>
+
+                <!-- Carte Black Clover -->
+                <div class="gout-card brutal-border brutal-shadow" id="gout-black-clover">
+                    <div class="gout-card-header">
+                        <span class="gout-tag text-anton">ANIME</span>
+                        <h3 class="gout-title text-anton">Black Clover</h3>
+                    </div>
+                    <div class="gout-card-content">
+                        <!-- Photo de l'univers (branchée par scenes.js depuis config.js) -->
+                        <div class="gout-photo" id="gout-anime-photo" hidden>
+                            <img alt="Black Clover" loading="lazy">
+                        </div>
+                        <div class="gout-character">
+                            <span class="text-anton">Asta</span> — Sans magie dans un monde où tout est magie,
+                            il ne lâche rien.
+                            Sa force ? Une détermination brute qui finit par plier la réalité.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carte True Beauty -->
+                <div class="gout-card brutal-border brutal-shadow" id="gout-true-beauty">
+                    <div class="gout-card-header">
+                        <span class="gout-tag text-anton">SÉRIE</span>
+                        <h3 class="gout-title text-anton">True Beauty</h3>
+                    </div>
+                    <div class="gout-card-content">
+                        <!-- Photo de la série (branchée par scenes.js depuis config.js) -->
+                        <div class="gout-photo" id="gout-serie-photo" hidden>
+                            <img alt="True Beauty" loading="lazy">
+                        </div>
+                        <div class="gout-description">
+                            Le masque du maquillage, la peur du regard des autres,
+                            et ce moment où on choisit de se montrer tel qu'on est.
+                            Drôle, touchant, vrai.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============================================================
+                     LES DISQUETTES — « DANS SES OREILLES »
+                     Vinyles interactifs injectés par scenes.js depuis config.js
+                     (DISQUETTES.DISQUES + DISQUETTES.BONUS).
+                     Tous les disques sont libres dès le départ : « écouté »
+                     signifie 10 s de lecture cumulées OU fin du son. Le disque
+                     BONUS (Emka Dream) se révèle quand tous les disques
+                     d'artistes sont écoutés. Un son introuvable affiche
+                     « SON INDISPONIBLE » et compte comme écouté : la page ne
+                     se bloque jamais. Traces (stickers + points) mémorisées
+                     dans localStorage.
+                     ============================================================ -->
+                <div class="disquettes-block" id="disquettes-block">
+                    <div class="disquette-shelf-label">
+                        <span class="gout-tag text-anton">DANS SES OREILLES</span>
+                    </div>
+                    <p class="disquette-consigne text-playfair" id="disquette-consigne">Touche un disque pour l'écouter.</p>
+
+                    <!-- Étagère des disquettes ( Injecté par scenes.js ) -->
+                    <div class="disquettes-shelf" id="disquettes-shelf"></div>
+
+                    <!-- Message de révélation du BONUS (apparaît à la fin) -->
+                    <p class="bonus-note text-playfair" id="bonus-note" hidden></p>
+
+                    <!-- Trace de progression : un point par disquette écoute -->
+                    <div class="disquette-trace" id="disquette-trace" role="status" aria-label="Progression des écoutes"></div>
+                </div>
+            </div>
+            <div class="page-footer">
+                <div class="next-hint">SUIVANT : ELLE SE DÉCRIT <div class="next-arrow"></div></div>
+            </div>
+        </section>
+
+        <!-- Page 7 : Elle se décrit -->
+        <section id="page-7" class="page mots-page">
+            <div class="reveal" style="width: 100%; max-width: 600px; text-align: center;">
+                <div class="edito-label">ELLE SE DÉCRIT</div>
+                <p class="mots-intro text-playfair" style="font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.7;">
+                    Tu te décris comme…
+                </p>
+                <div class="mots-grid" id="mots-grid">
+                    <!-- Injecté par JS : 3 blocs Corail/Jaune/Turquoise -->
+                </div>
+                <p class="mots-signature text-playfair" style="margin-top: 2rem; font-size: 1rem; opacity: 0.6;">
+                    Ce sont tes mots.
+                </p>
+            </div>
+            <div class="page-footer">
+                <div class="next-hint">SUIVANT : ILS PARLENT DE TOI <div class="next-arrow"></div></div>
+            </div>
+        </section>
+
+        <!-- Page 8 : Ils parlent de toi -->
+        <section id="page-8" class="page amis-page">
+            <div class="reveal" style="width: 100%; max-width: 600px;">
+                <div class="edito-label">ILS PARLENT DE TOI</div>
+                <div class="amis-grid" id="amis-grid">
+                    <!-- Injecté par JS depuis config.js AMIS[] -->
+                    <!-- Structure par carte : avatar rond (initiale), message Playfair italique, lecteur vocal -->
+                </div>
+                <p class="amis-empty text-playfair" style="text-align: center; opacity: 0.5; display: none;">
+                    Messages à venir…
+                </p>
+            </div>
+            <div class="page-footer">
+                <div class="next-hint">SUIVANT : EN VIDÉO <div class="next-arrow"></div></div>
+            </div>
+        </section>
+
+        <!-- Page 9 : En Vidéo -->
+        <section id="page-9" class="page videos-page">
+            <div class="reveal" style="width: 100%; max-width: 600px;">
+                <div class="edito-label">EN VIDÉO</div>
+                <div class="videos-grid" id="videos-grid">
+                    <!-- Injecté par JS : vignettes v1, v3 (paysage incliné + ruban), v2 -->
+                    <!-- AUCUNE lecture automatique : tap = fenêtre modale avec le son -->
+                </div>
+            </div>
+            <div class="page-footer">
+                <div class="next-hint">SUIVANT : QUATRIÈME DE COUVERTURE <div class="next-arrow"></div></div>
+            </div>
+        </section>
+
+        <!-- Page 10 : Quatrième de Couverture -->
+        <section id="page-10" class="page back-cover-page">
+            <div class="reveal" style="width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative;">
+
+                <!-- Gâteau SVG avec 3 bougies -->
+                <div class="cake-container" id="cake-container">
+                    <svg class="cake-svg" viewBox="0 0 200 250" width="200" height="250" aria-hidden="true">
+                        <!-- Base du gâteau -->
+                        <rect x="30" y="140" width="140" height="80" rx="0" fill="var(--paper)" stroke="var(--ink-black)" stroke-width="3"/>
+                        <rect x="20" y="130" width="160" height="15" rx="0" fill="var(--sun-yellow)" stroke="var(--ink-black)" stroke-width="3"/>
+                        <!-- Étage du haut -->
+                        <rect x="50" y="70" width="100" height="70" rx="0" fill="var(--paper)" stroke="var(--ink-black)" stroke-width="3"/>
+                        <rect x="40" y="60" width="120" height="15" rx="0" fill="var(--vivid-coral)" stroke="var(--ink-black)" stroke-width="3"/>
+                        <!-- Bougies (3) -->
+                        <g id="candles-group">
+                            <g class="candle" data-index="0" style="cursor: pointer;">
+                                <rect x="70" y="30" width="12" height="35" fill="var(--ink-black)" stroke="var(--ink-black)" stroke-width="2"/>
+                                <ellipse cx="76" cy="28" rx="8" ry="4" fill="none" stroke="var(--ink-black)" stroke-width="2"/>
+                                <path class="flame" d="M76 28 Q70 10 76 0 Q82 10 76 28" fill="var(--vivid-coral)" stroke="var(--sun-yellow)" stroke-width="1.5"/>
+                                <path class="smoke" d="M76 0 Q70 -20 76 -30 Q82 -20 76 0" fill="none" stroke="var(--ink-black)" stroke-width="1.5" opacity="0"/>
+                            </g>
+                            <g class="candle" data-index="1" style="cursor: pointer;">
+                                <rect x="94" y="25" width="12" height="40" fill="var(--ink-black)" stroke="var(--ink-black)" stroke-width="2"/>
+                                <ellipse cx="100" cy="23" rx="8" ry="4" fill="none" stroke="var(--ink-black)" stroke-width="2"/>
+                                <path class="flame" d="M100 23 Q94 5 100 -5 Q106 5 100 23" fill="var(--vivid-coral)" stroke="var(--sun-yellow)" stroke-width="1.5"/>
+                                <path class="smoke" d="M100 -5 Q94 -25 100 -35 Q106 -25 100 -5" fill="none" stroke="var(--ink-black)" stroke-width="1.5" opacity="0"/>
+                            </g>
+                            <g class="candle" data-index="2" style="cursor: pointer;">
+                                <rect x="118" y="30" width="12" height="35" fill="var(--ink-black)" stroke="var(--ink-black)" stroke-width="2"/>
+                                <ellipse cx="124" cy="28" rx="8" ry="4" fill="none" stroke="var(--ink-black)" stroke-width="2"/>
+                                <path class="flame" d="M124 28 Q118 10 124 0 Q130 10 124 28" fill="var(--vivid-coral)" stroke="var(--sun-yellow)" stroke-width="1.5"/>
+                                <path class="smoke" d="M124 0 Q118 -20 124 -30 Q130 -20 124 0" fill="none" stroke="var(--ink-black)" stroke-width="1.5" opacity="0"/>
+                            </g>
+                        </g>
+                        <!-- Décoration gâteau -->
+                        <g fill="var(--vivid-coral)">
+                            <circle cx="60" cy="100" r="5" stroke="var(--ink-black)" stroke-width="1.5"/>
+                            <circle cx="140" cy="100" r="5" stroke="var(--ink-black)" stroke-width="1.5"/>
+                            <circle cx="80" cy="160" r="4" stroke="var(--ink-black)" stroke-width="1.5"/>
+                            <circle cx="120" cy="160" r="4" stroke="var(--ink-black)" stroke-width="1.5"/>
+                        </g>
+                    </svg>
+                </div>
+
+                <!-- Texte successif -->
+                <div class="back-cover-text" id="back-cover-text" style="margin-top: 2rem; max-width: 400px;">
+                    <p class="back-line" data-line="0">Chioma,</p>
+                    <p class="back-line" data-line="1">On se connaît encore peu…</p>
+                    <p class="back-line" data-line="2">Que cette année t'apporte tout ce que tu mérites.</p>
+                    <p class="back-line" data-line="3">Joyeux anniversaire.</p>
+                    <p class="back-line signature" data-line="4">— Wilfried</p>
+                </div>
+
+                <!-- Actions finales -->
+                <div class="back-cover-actions" style="margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem; align-items: center;">
+                    <a id="btn-whatsapp" class="btn-primary brutal-border brutal-shadow" href="#" target="_blank" rel="noopener">
+                        <span class="text-anton" style="font-size: 1rem;">Envoyer sur WhatsApp</span>
+                    </a>
+                    <button id="btn-revoir" class="btn-secondary brutal-border brutal-shadow" style="font-family: var(--font-space); font-weight: 700; text-transform: uppercase; padding: 12px 24px;">
+                        Revoir
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Compteur de page fixe (caché tant que la gate est active) -->
+    <div id="page-counter" class="page-counter">01 / 10</div>
+
+    <!-- ============================================================
+         PAGE D'ENTRÉE "SCELLÉE" (Gate) + QUIZ
+         3 questions (config.js ENTRY_QUIZ) avant tout décachetage.
+         Le 30 novembre 2026 seulement : bouton d'ouverture → musique.
+         Le prénom "Chioma" n'apparaît PAS ici tant que le sceau tient.
+         ============================================================ -->
+    <section id="page-entry" class="entry-overview" aria-label="Page d'entrée scellée">
+        <div class="entry-inner">
+
+            <!-- Objet tactile : magazine scellé (clic dessus OU sur le bouton ci-dessous) -->
+            <div id="sealed-magazine" class="sealed-magazine" role="button" tabindex="0" aria-label="Magazine scellé — toucher pour ouvrir">
+
+                <!-- Tranche de reliure (bord gauche) -->
+                <div class="entry-spine" aria-hidden="true">
+                    <div class="spine-dot"></div>
+                    <div class="spine-line"></div>
+                    <div class="spine-dot"></div>
+                    <div class="spine-line"></div>
+                    <div class="spine-dot"></div>
+                </div>
+
+                <!-- Surface de couverture -->
+                <div class="entry-cover">
+                    <!-- Haut : tampon archive + sticker série -->
+                    <div class="entry-top">
+                        <div class="entry-badge-archive">
+                            <span class="entry-dot-pulse" aria-hidden="true"></span>
+                            <span class="entry-text-micro">ARCHIVE // CLASSIFIÉ</span>
+                        </div>
+                        <div class="entry-sticker">N° 001 — ÉDITION NON CATALOGUÉE</div>
+                    </div>
+
+                    <!-- Centre : losange corail + croix + VOL. PRIVÉ -->
+                    <div class="entry-center">
+                        <div class="entry-diamond">
+                            <div class="entry-diamond-stamp"></div>
+                            <div class="entry-cross" aria-hidden="true">
+                                <svg viewBox="0 0 24 24"><path d="M19 10.5h-5.5V5c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v5.5H5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5h5.5V19c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-5.5H19c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5z"/></svg>
+                            </div>
+                        </div>
+                        <div class="entry-vol">VOL. PRIVÉ</div>
+                    </div>
+
+                    <!-- Bas : faux code-barres + série -->
+                    <div class="entry-bottom">
+                        <div class="entry-barcode" aria-hidden="true">
+                            <span></span><span></span><span></span><span></span><span></span>
+                            <span></span><span></span><span></span><span></span>
+                        </div>
+                        <span class="entry-ser">SER. 001/NC</span>
+                    </div>
+                </div>
+
+                <!-- Bandeau sécurité noir au centre (chevauche la reliure et la couverture) -->
+                <div class="entry-band">
+                    <div class="entry-band-strip" aria-label="SCELLÉ // ARCHIVE PRIVÉE">
+                        <span class="entry-band-diamond" aria-hidden="true"></span>
+                        <span>SCELLÉ // ARCHIVE PRIVÉE</span>
+                        <span class="entry-band-diamond" aria-hidden="true"></span>
+                        <span>SCELLÉ // ARCHIVE PRIVÉE</span>
+                        <span class="entry-band-diamond" aria-hidden="true"></span>
+                        <span>SCELLÉ // ARCHIVE PRIVÉE</span>
+                        <span class="entry-band-diamond" aria-hidden="true"></span>
+                        <span>SCELLÉ // ARCHIVE PRIVÉE</span>
+                        <span class="entry-band-diamond" aria-hidden="true"></span>
+                    </div>
+                </div>
+
+                <!-- Cadenas en coin (SVG inline, pas de police Material externe) -->
+                <div class="entry-lock-badge" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Callouts sous l'objet : citation + quiz du sceau + (compte à rebours ou bouton) -->
+            <div class="entry-callout">
+                <p class="entry-quote">Un exemplaire t’attend</p>
+
+                <!-- Quiz du sceau : 3 questions posées avant décachetage.
+                     Contenu (questions / choix) injecté par scenes.js depuis config.js.
+                     Tant que le quiz tourne, le bouton pill est caché (hidden). -->
+                <div class="entry-quiz" id="entry-quiz">
+                    <div class="entry-quiz-progress" id="quiz-progress"></div>
+                    <div class="entry-question-label" id="quiz-question"></div>
+                    <div class="entry-choices" id="quiz-choices"></div>
+                    <div class="entry-quiz-feedback" id="quiz-feedback"></div>
+                </div>
+
+                <!-- Bouton pill : rendu visible seulement quand le sceau peut se lever
+                     (quiz réussi ET 30 novembre 2026 atteint) -->
+                <button id="open-trigger" class="entry-open-btn" type="button" hidden>
+                    <span class="entry-btn-dot" aria-hidden="true"></span>
+                    <span class="entry-btn-label">Toucher pour ouvrir</span>
+                    <span class="entry-btn-arrow" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                    </span>
+                </button>
+
+                <!-- Compte à rebours : affiché si le quiz est réussi AVANT le jour J -->
+                <div class="entry-countdown" id="entry-countdown" hidden>
+                    <p class="entry-countdown-title" id="countdown-title"></p>
+                    <p class="entry-countdown-sub" id="countdown-sub"></p>
+                    <div class="countdown-grid">
+                        <div class="countdown-cell"><span class="digit" id="cd-days">0</span><span class="unit" id="cd-days-u"></span></div>
+                        <div class="countdown-cell"><span class="digit" id="cd-hours">0</span><span class="unit" id="cd-hours-u"></span></div>
+                        <div class="countdown-cell"><span class="digit" id="cd-mins">0</span><span class="unit" id="cd-mins-u"></span></div>
+                        <div class="countdown-cell"><span class="digit" id="cd-secs">0</span><span class="unit" id="cd-secs-u"></span></div>
+                    </div>
+                    <p class="entry-countdown-legende" id="countdown-legende"></p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Voile de refus : s'affiche après 3 mauvaises réponses (texte depuis config.js) -->
+        <div class="entry-veil" id="entry-veil" hidden>
+            <p class="entry-veil-text" id="veil-text"></p>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         PAGE INTERMÉDIAIRE (étape H+)
+         Après le décachetage, avant d'arriver au magazine :
+         la note de l'éditeur se soulève, les lignes apparaissent
+         une à une, puis le bouton (ou un tap n'importe où) continue.
+         Toute la section est cliquable pour avancer.
+         ============================================================ -->
+    <section id="page-intro" class="entry-intro" aria-label="Message avant le magazine" hidden>
+        <div class="intro-page" id="intro-page">
+
+            <!-- Sticker adhésif en haut de la page -->
+            <div class="intro-note-label">NOTE DE L'ÉDITEUR</div>
+
+            <!-- Note de Wilfried : les lignes apparaissent une à une -->
+            <p class="intro-line" data-line="0">J'ai confectionné cette idée pour toi,</p>
+            <p class="intro-line" data-line="1">pour le jour de ton anniversaire.</p>
+            <p class="intro-line" data-line="2">J'espère que ça va te plaire.</p>
+
+            <!-- Signature -->
+            <p class="intro-signature" data-line="3">— Wilfried</p>
+
+            <!-- Continuer : millimétré, personne ne peut rester bloqué -->
+            <button id="intro-continue" class="entry-open-btn" type="button" hidden>
+                <span class="entry-btn-dot" aria-hidden="true"></span>
+                <span class="entry-btn-label">Continuer</span>
+                <span class="entry-btn-arrow" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                </span>
+            </button>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         LECTEUR VIDÉO (fenêtre modale) — Page 9 "EN VIDÉO"
+         Ouverte par un tap sur une vignette (avec le son, geste utilisateur).
+         Une seule <video> réutilisable ; fermeture ✕ / fond / Échap ;
+         pause + remise à zéro à la fermeture.
+         ============================================================ -->
+    <section id="video-modal" class="video-modal" hidden role="dialog" aria-modal="true" aria-label="Lecteur vidéo">
+        <div class="video-modal-backdrop" id="video-modal-backdrop"></div>
+        <div class="video-modal-box">
+            <button id="video-modal-close" class="video-modal-close" type="button" aria-label="Fermer la vidéo">✕</button>
+            <video id="video-modal-player" playsinline preload="metadata"></video>
+            <p class="video-modal-error" id="video-modal-error" hidden>Vidéo indisponible</p>
+        </div>
+    </section>
+
+</body>
+</html>
