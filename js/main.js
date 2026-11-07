@@ -301,6 +301,35 @@ window.App = {
     },
 
     /**
+     * Branche le bouton fixe de la musique de fond.
+     * Un seul bouton : MUSIQUE -> MUET -> MUSIQUE.
+     */
+    initMusicToggle: function() {
+        const btn = document.getElementById("btn-music-toggle");
+        if (!btn) return;
+        if (btn.dataset.musicToggleBound === "true") return;
+        btn.dataset.musicToggleBound = "true";
+
+        const label = btn.querySelector(".music-toggle-label");
+
+        const synchroniser = () => {
+            const coupe = !!window.AppAudio?.isMusicMuted;
+            btn.classList.toggle("est-muet", coupe);
+            btn.setAttribute("aria-pressed", coupe ? "true" : "false");
+            btn.setAttribute("aria-label", coupe ? "Rétablir la musique de fond" : "Couper la musique de fond");
+            if (label) label.textContent = coupe ? "MUET" : "MUSIQUE";
+        };
+
+        btn.addEventListener("click", () => {
+            window.AppAudio?.toggleMusic?.();
+            synchroniser();
+        });
+
+        document.addEventListener("app:musicstate", synchroniser);
+        synchroniser();
+    },
+
+    /**
      * Cache la flèche "Fais défiler ↓" après le premier scroll
      */
     hideScrollHintOnScroll: function() {
@@ -328,6 +357,7 @@ window.App = {
 document.addEventListener("DOMContentLoaded", () => {
     window.AppAudio.init();
     window.App.init();
+    window.App.initMusicToggle();
 
     // === PAGE D'ENTRÉE SCELLÉE (gate) ===
     // Si présente dans le DOM, on l'active : c'est la première chose visible.

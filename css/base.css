@@ -86,6 +86,65 @@ body {
     z-index: 1000;
 }
 
+/* Bouton musique : un seul bouton pour couper / rétablir la musique de fond */
+.music-toggle {
+    position: fixed;
+    left: 20px;
+    bottom: 20px;
+    z-index: 1000;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 12px;
+    background: var(--ink-black);
+    color: var(--paper);
+    border: var(--border-thin);
+    box-shadow: var(--shadow-small);
+    font-family: var(--font-space);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+
+.music-toggle:active {
+    transform: translate(2px, 2px);
+    box-shadow: none;
+}
+
+.music-toggle.est-muet {
+    background: var(--vivid-coral);
+    color: var(--ink-black);
+}
+
+.music-toggle-icon {
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.music-toggle.est-muet .music-toggle-icon {
+    position: relative;
+}
+
+/* Petite barre oblique sur la note quand la musique est coupée */
+.music-toggle.est-muet .music-toggle-icon::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 2px;
+    height: 1.15em;
+    background: currentColor;
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+/* La gate reste propre : le bouton apparaît après l'ouverture */
+body.entry-lock .music-toggle {
+    display: none;
+}
+
 /* Utilitaires de style Brutaliste */
 .brutal-border { border: var(--border-thick); }
 .brutal-shadow { box-shadow: var(--shadow-hard); }

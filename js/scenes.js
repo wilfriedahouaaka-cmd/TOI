@@ -1024,10 +1024,14 @@ window.AppScenes = {
 
     /**
      * Logique de la Page 8 : Ils parlent de toi
-     * Injection des cartes amis avec lecteur audio et synchronisation
+     * Les amis « vedette » gardent une carte complète ; les autres
+     * passent dans le mur « ILS EN PARLENT AUSSI », en citations courtes.
+     * Aucun texte d'ami n'est modifié : tout est injecté en textContent.
      */
     initPage8: function() {
-        const amis = window.AppConfig?.AMIS || [];
+        const amis = Array.isArray(window.AppConfig?.AMIS)
+            ? window.AppConfig.AMIS.filter(ami => ami && typeof ami === "object")
+            : [];
         const grid = document.getElementById("amis-grid");
         const empty = document.querySelector(".amis-empty");
         if (!grid) return;
@@ -1041,63 +1045,197 @@ window.AppScenes = {
         if (empty) empty.style.display = "none";
         grid.innerHTML = "";
 
-        amis.forEach((ami, index) => {
-            const card = document.createElement("div");
+        // 1. Vedettes : celles marquées true. Si aucune, les 5 premières.
+        const vedettesChoisies = amis.filter(ami => ami.vedette === true);
+        const vedettes = vedettesChoisies.length > 0
+            ? vedettesChoisies
+            : amis.slice(0, 5);
+        const ensembleVedettes = new Set(vedettes);
+        const autres = amis.filter(ami => !ensembleVedettes.has(ami));
+
+        // 2. Cartes complètes des vedettes.
+        vedettes.forEach((ami, index) => {
+            const card = document.createElement("article");
             card.className = "ami-card reveal";
-            card.style.transitionDelay = `${index * 0.1}s`;
+            card.style.transitionDelay = (index * 0.1) + "s";
 
-            // Préparer le message avec spans pour synchronisation future
-            const messageHtml = ami.message || "Message à venir…";
+            const header = document.createElement("div");
+            header.className = "ami-header";
 
-            card.innerHTML = `
-                <div class="ami-header">
-                    <div class="ami-avatar">${ami.initiale || ami.prenom?.[0] || "?"}</div>
-                    <div class="ami-name">${ami.prenom || "Ami"}</div>
-                </div>
-                <div class="ami-message">${messageHtml}</div>
-                ${ami.audio ? `
-                <div class="ami-audio-player">
-                    <button class="ami-audio-btn" data-audio="${ami.audio}" data-index="${index}">Écouter</button>
-                    <div class="ami-progress"><div class="ami-progress-bar"></div></div>
-                </div>
-                ` : ""}
-            `;
+            const avatar = document.createElement("div");
+            avatar.className = "ami-avatar";
+            avatar.textContent = ami.initiale || (ami.prenom ? ami.prenom.charAt(0) : "?");
+
+            const nom = document.createElement("div");
+            nom.className = "ami-name";
+            nom.textContent = ami.prenom || "Ami";
+
+            header.appendChild(avatar);
+            header.appendChild(nom);
+            card.appendChild(header);
+
+            const message = document.createElement("div");
+            message.className = "ami-message";
+            message.textContent = ami.message || "Message à venir…";
+            card.appendChild(message);
+
+            if (ami.audio) {
+                const player = document.createElement("div");
+                player.className = "ami-audio-player";
+
+                const bouton = document.createElement("button");
+                bouton.type = "button";
+                bouton.className = "ami-audio-btn";
+                bouton.dataset.audio = ami.audio;
+                bouton.dataset.index = String(amis.indexOf(ami));
+                bouton.dataset.label = "Écouter le message de " + (ami.prenom || "cet ami");
+                bouton.textContent = "Écouter";
+                bouton.setAttribute("aria-label", bouton.dataset.label);
+                bouton.setAttribute("aria-pressed", "false");
+
+                const progression = document.createElement("div");
+                progression.className = "ami-progress";
+                const barre = document.createElement("div");
+                barre.className = "ami-progress-bar";
+                progression.appendChild(barre);
+
+                player.appendChild(bouton);
+                player.appendChild(progression);
+                card.appendChild(player);
+            }
+
             grid.appendChild(card);
-
             if (window.App && typeof window.App.observeElement === "function") {
                 window.App.observeElement(card);
             }
         });
 
-        // Gestion des lecteurs audio (délégation d'événement)
-        grid.addEventListener("click", (e) => {
-            const btn = e.target.closest(".ami-audio-btn");
-            if (!btn) return;
+        // 3. Mur des autres amis.
+        if (autres.length > 0) {
+            const mur = document.createElement("section");
+            mur.className = "amis-mur";
 
-            const audioSrc = btn.dataset.audio;
-            const index = btn.dataset.index;
-            if (!audioSrc) return;
+            const titre = document.createElement("h2");
+            titre.className = "amis-mur-titre text-anton";
+            titre.textContent = "ILS EN PARLENT AUSSI";
+            mur.appendChild(titre);
 
-            window.AppScenes.playVoiceMessage(audioSrc, btn, index);
-        });
+            const grille = document.createElement("div");
+            grille.className = "amis-mur-grille";
+
+            autres.forEach((ami, index) => {
+                const citation = document.createElement("article");
+                const couleurs = ["corail", "jaune", "turquoise"];
+                citation.className = "ami-citation ami-citation--" + couleurs[index % 3];
+                citation.style.setProperty("--inclinaison", index % 2 === 0 ? "-1.2deg" : "1.2deg");
+
+                const bouton = document.createElement("button");
+                bouton.type = "button";
+                bouton.className = "ami-citation-toggle";
+                bouton.setAttribute("aria-expanded", "false");
+                bouton.dataset.label = "Déplier le message de " + (ami.prenom || "cet ami");
+                bouton.setAttribute("aria-label", bouton.dataset.label);
+
+                const tete = document.createElement("span");
+                tete.className = "ami-citation-tete";
+
+                const nom = document.createElement("span");
+                nom.className = "ami-citation-nom";
+                nom.textContent = ami.prenom || "Ami";
+
+                const signe = document.createElement("span");
+                signe.className = "ami-citation-plus";
+                signe.setAttribute("aria-hidden", "true");
+                signe.textContent = "+";
+
+                tete.appendChild(nom);
+                tete.appendChild(signe);
+
+                const texte = document.createElement("span");
+                texte.className = "ami-citation-texte";
+                texte.textContent = ami.message || "Message à venir…";
+
+                bouton.appendChild(tete);
+                bouton.appendChild(texte);
+                citation.appendChild(bouton);
+
+                if (ami.audio) {
+                    citation.classList.add("a-audio");
+                    const audioBtn = document.createElement("button");
+                    audioBtn.type = "button";
+                    audioBtn.className = "ami-audio-btn ami-audio-btn--wall";
+                    audioBtn.dataset.audio = ami.audio;
+                    audioBtn.dataset.index = String(amis.indexOf(ami));
+                    audioBtn.dataset.label = "Écouter le message de " + (ami.prenom || "cet ami");
+                    audioBtn.textContent = "▶";
+                    audioBtn.setAttribute("aria-label", audioBtn.dataset.label);
+                    audioBtn.setAttribute("aria-pressed", "false");
+                    citation.appendChild(audioBtn);
+                }
+
+                grille.appendChild(citation);
+            });
+
+            mur.appendChild(grille);
+            grid.appendChild(mur);
+        }
+
+        // 4. Audio et dépliage : une seule délégation, réinstallée à chaque init.
+        grid.onclick = (e) => {
+            const audioBtn = e.target.closest(".ami-audio-btn");
+            if (audioBtn) {
+                e.stopPropagation();
+                const src = audioBtn.dataset.audio;
+                if (!src) return;
+                window.AppScenes.playVoiceMessage(src, audioBtn, audioBtn.dataset.index);
+                return;
+            }
+
+            const toggle = e.target.closest(".ami-citation-toggle");
+            if (!toggle) return;
+
+            const citation = toggle.closest(".ami-citation");
+            if (!citation) return;
+
+            const ouvert = citation.classList.toggle("est-ouvert");
+            toggle.setAttribute("aria-expanded", ouvert ? "true" : "false");
+            const signe = toggle.querySelector(".ami-citation-plus");
+            if (signe) signe.textContent = ouvert ? "−" : "+";
+        };
     },
 
     /**
-     * Joue un message vocal avec synchronisation basique
-     * @param {string} src - Chemin du fichier audio
-     * @param {HTMLElement} btn - Bouton déclencheur
-     * @param {string} index - Index de l'ami
+     * Joue un message vocal avec synchronisation basique.
+     * Un seul lecteur à la fois : toute autre voix en cours est coupée.
+     * Le bouton du mur garde son pictogramme ▶ / ❚❚.
      */
     playVoiceMessage: function(src, btn, index) {
-        const isPlaying = btn.classList.contains("playing");
-        const progressBar = btn.parentElement?.querySelector(".ami-progress-bar");
+        const estBoutonMur = btn.classList.contains("ami-audio-btn--wall");
+        const progressBar = btn.closest(".ami-audio-player")?.querySelector(".ami-progress-bar");
+        const labelBase = btn.dataset.label || "Écouter";
 
-        // Arrêter tout autre audio vocal en cours
+        const majBouton = (actif) => {
+            btn.classList.toggle("playing", actif);
+            btn.setAttribute("aria-pressed", actif ? "true" : "false");
+            if (estBoutonMur) {
+                btn.textContent = actif ? "❚❚" : "▶";
+                btn.setAttribute("aria-label", actif ? "Mettre la voix en pause" : labelBase);
+            } else {
+                btn.textContent = actif ? "Pause" : "Écouter";
+                btn.setAttribute("aria-label", actif ? "Mettre la voix en pause" : labelBase);
+            }
+        };
+
+        const isPlaying = btn.classList.contains("playing");
+
+        // Arrêter tout autre audio vocal en cours.
         document.querySelectorAll(".ami-audio-btn.playing").forEach(otherBtn => {
             if (otherBtn !== btn) {
                 otherBtn.classList.remove("playing");
-                otherBtn.textContent = "Écouter";
-                const otherBar = otherBtn.parentElement?.querySelector(".ami-progress-bar");
+                otherBtn.setAttribute("aria-pressed", "false");
+                otherBtn.setAttribute("aria-label", otherBtn.dataset.label || "Écouter");
+                otherBtn.textContent = otherBtn.classList.contains("ami-audio-btn--wall") ? "▶" : "Écouter";
+                const otherBar = otherBtn.closest(".ami-audio-player")?.querySelector(".ami-progress-bar");
                 if (otherBar) otherBar.style.width = "0%";
             }
         });
@@ -1106,11 +1244,27 @@ window.AppScenes = {
             // Pause
             if (this._currentVoiceAudio) {
                 this._currentVoiceAudio.pause();
+                try {
+                    this._currentVoiceAudio.currentTime = 0;
+                } catch (err) {
+                    // Flux non seekable : on garde la pause.
+                }
+                this._currentVoiceAudio = null;
             }
-            btn.classList.remove("playing");
-            btn.textContent = "Écouter";
-            window.AppAudio.setPrioritySound('none');
+            majBouton(false);
+            window.AppAudio.setPrioritySound("none");
             return;
+        }
+
+        // Nouvelle voix : couper l'ancienne avant de créer la nouvelle.
+        if (this._currentVoiceAudio) {
+            this._currentVoiceAudio.pause();
+            try {
+                this._currentVoiceAudio.currentTime = 0;
+            } catch (err) {
+                // Flux non seekable : on garde la pause.
+            }
+            this._currentVoiceAudio = null;
         }
 
         // Nouveau lecteur audio vocal
@@ -1125,28 +1279,28 @@ window.AppScenes = {
         });
 
         audio.addEventListener("ended", () => {
-            btn.classList.remove("playing");
-            btn.textContent = "Écouter";
+            majBouton(false);
             if (progressBar) progressBar.style.width = "0%";
-            window.AppAudio.setPrioritySound('none');
+            window.AppAudio.setPrioritySound("none");
             this._currentVoiceAudio = null;
         });
 
         audio.addEventListener("error", () => {
             btn.classList.remove("playing");
-            btn.textContent = "Erreur";
-            window.AppAudio.setPrioritySound('none');
+            btn.setAttribute("aria-pressed", "false");
+            btn.textContent = estBoutonMur ? "!" : "Erreur";
+            btn.setAttribute("aria-label", "Erreur de lecture");
+            window.AppAudio.setPrioritySound("none");
             this._currentVoiceAudio = null;
         });
 
-        btn.classList.add("playing");
-        btn.textContent = "Pause";
-        window.AppAudio.setPrioritySound('voice');
+        majBouton(true);
+        window.AppAudio.setPrioritySound("voice");
         audio.play().catch(err => {
             console.warn("Lecture vocale bloquée :", err);
-            btn.classList.remove("playing");
-            btn.textContent = "Écouter";
-            window.AppAudio.setPrioritySound('none');
+            majBouton(false);
+            window.AppAudio.setPrioritySound("none");
+            this._currentVoiceAudio = null;
         });
     },
 
@@ -1378,59 +1532,269 @@ window.AppScenes = {
 
     /**
      * Logique de la Page 10 : Quatrième de Couverture
-     * Gâteau SVG interactif, texte successif, WhatsApp, Revoir
+     * Le gâteau cache le message. Appui maintenu (ou tap / Entrée)
+     * pour souffler, puis révélation progressive du texte.
      */
     initPage10: function() {
         const config = window.AppConfig?.BACK_COVER;
-        if (!config) return;
-
-        // 1. Lignes de texte successives
-        const lines = document.querySelectorAll("#back-cover-text .back-line");
-        lines.forEach((line, i) => {
-            line.style.transitionDelay = `${i * 0.4}s`;
-            setTimeout(() => line.classList.add("visible"), 300 + i * 400);
-        });
-
-        // 2. Gâteau - bougies interactives
-        const cakeContainer = document.getElementById("cake-container");
-        const candles = document.querySelectorAll("#candles-group .candle");
-        let blownCount = 0;
-
-        candles.forEach((candle, i) => {
-            candle.addEventListener("click", () => {
-                if (candle.classList.contains("extinguished")) return;
-
-                candle.classList.add("extinguished");
-                const flame = candle.querySelector(".flame");
-                const smoke = candle.querySelector(".smoke");
-                if (flame) flame.classList.add("extinguished");
-                if (smoke) smoke.style.opacity = "0.8";
-
-                blownCount++;
-
-                // Confettis à la 3ème bougie
-                if (blownCount === 3) {
-                    this._spawnConfetti(cakeContainer);
-                }
-            });
-        });
-
-        // 3. Bouton WhatsApp
+        const page = document.getElementById("page-10");
+        const cake = document.getElementById("cake-container");
+        const message = document.getElementById("back-cover-message");
+        const text = document.getElementById("back-cover-text");
+        const final = document.getElementById("back-cover-final");
+        const skip = document.getElementById("btn-voir-message");
+        const hint = document.getElementById("cake-hint");
         const btnWA = document.getElementById("btn-whatsapp");
+        const btnRevoir = document.getElementById("btn-revoir");
+
+        if (!config || !page || !cake || !message || !text || !final) return;
+
+        const reduction = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const DUREE_APPUI = 1500;       // appui complet pour souffler
+        const DUREE_TAP = 300;          // en dessous, c'est un tap accessible
+        const DELAI_SECOURS = 25000;    // bouton "Voir le message"
+        const PAUSE_LIGNE = 700;        // pause entre deux lignes
+        const SILENCE_FINAL = 3000;     // silence avant la phrase finale
+
+        let messageRevele = false;
+        let timerAppui = null;
+        let timerSecours = null;
+        let debutAppui = 0;
+        let pointerId = null;
+        let supprimerClic = false;
+        let observateur = null;
+
+        // 1. Texte exact depuis config.js (aucune correction de texte ici).
+        text.textContent = "";
+        const lignes = Array.isArray(config.lines) ? config.lines : [];
+        lignes.forEach((ligne, index) => {
+            const p = document.createElement("p");
+            p.className = "back-line" + (index === lignes.length - 1 ? " signature" : "");
+            p.dataset.line = String(index);
+            p.textContent = ligne;
+            text.appendChild(p);
+        });
+
+        // 2. WhatsApp : numéro et message déjà validés dans config.js.
         if (btnWA && config.whatsapp) {
-            const url = `https://wa.me/${config.whatsapp.numero}?text=${encodeURIComponent(config.whatsapp.message)}`;
-            btnWA.href = url;
+            btnWA.href = `https://wa.me/${config.whatsapp.numero}?text=${encodeURIComponent(config.whatsapp.message)}`;
         }
 
-        // 4. Bouton Revoir -> scroll vers la couverture
-        const btnRevoir = document.getElementById("btn-revoir");
+        // 3. Revoir : retour en haut du magazine.
         if (btnRevoir) {
             btnRevoir.addEventListener("click", () => {
                 const container = document.getElementById("main-container");
-                if (container) {
+                if (!container) return;
+
+                if (reduction) {
+                    // #main-container est en scroll-behavior:smooth.
+                    // On force "auto" le temps du retour pour rester instantané
+                    // en mouvement réduit, puis on rend la main au CSS.
+                    const ancien = container.style.scrollBehavior;
+                    container.style.scrollBehavior = "auto";
+                    container.scrollTo({ top: 0, behavior: "auto" });
+                    container.style.scrollBehavior = ancien;
+                } else {
                     container.scrollTo({ top: 0, behavior: "smooth" });
                 }
             });
+        }
+
+        const arreterSecours = () => {
+            if (timerSecours) clearTimeout(timerSecours);
+            timerSecours = null;
+        };
+
+        const cacherSecours = () => {
+            arreterSecours();
+            if (skip) skip.hidden = true;
+        };
+
+        const demarrerSecours = () => {
+            if (messageRevele || timerSecours) return;
+            timerSecours = setTimeout(() => {
+                timerSecours = null;
+                if (!messageRevele && skip) skip.hidden = false;
+            }, DELAI_SECOURS);
+        };
+
+        const eteindreBougies = () => {
+            cake.querySelectorAll(".flame").forEach((flame) => {
+                flame.classList.add("extinguished");
+            });
+            cake.querySelectorAll(".smoke").forEach((smoke, index) => {
+                setTimeout(() => smoke.classList.add("est-visible"), index * 70);
+            });
+        };
+
+        const afficherFinal = (direct = false) => {
+            if (!final) return;
+            final.hidden = false;
+            final.classList.add("est-visible");
+
+            const items = final.querySelectorAll(".final-item");
+            if (reduction || direct) {
+                items.forEach((item) => item.classList.add("visible"));
+                return;
+            }
+            items.forEach((item, index) => {
+                setTimeout(() => item.classList.add("visible"), index * 350);
+            });
+        };
+
+        const reveler = (direct = false) => {
+            if (messageRevele) return;
+            messageRevele = true;
+
+            cacherSecours();
+            if (timerAppui) {
+                clearTimeout(timerAppui);
+                timerAppui = null;
+            }
+            if (observateur) {
+                observateur.disconnect();
+                observateur = null;
+            }
+
+            cake.classList.remove("souffle-en-cours");
+            cake.setAttribute("aria-disabled", "true");
+            cake.tabIndex = -1;
+            if (hint) hint.setAttribute("aria-hidden", "true");
+            eteindreBougies();
+
+            // Confettis plats : le helper existant plafonne à 30 pièces,
+            // et respecte EFFETS.confettis + prefers-reduced-motion.
+            this._spawnConfetti(page);
+
+            page.classList.add("est-revele");
+            message.hidden = false;
+            message.setAttribute("aria-hidden", "false");
+            message.classList.add("est-visible");
+
+            const lignesAffichees = text.querySelectorAll(".back-line");
+
+            // Révélation directe (secours après 25 s) : on affiche tout de suite
+            // les lignes et les actions, sans attendre les 700 ms ni les 3 s.
+            if (reduction || direct) {
+                lignesAffichees.forEach((ligne) => ligne.classList.add("visible"));
+                afficherFinal(direct);
+                return;
+            }
+
+            // Le gâteau commence à descendre/rétrécir, puis chaque ligne
+            // apparaît avec 700 ms d'écart.
+            lignesAffichees.forEach((ligne, index) => {
+                setTimeout(() => ligne.classList.add("visible"), PAUSE_LIGNE + index * PAUSE_LIGNE);
+            });
+
+            const finDesLignes = PAUSE_LIGNE + Math.max(lignesAffichees.length - 1, 0) * PAUSE_LIGNE + 500;
+            setTimeout(() => afficherFinal(false), finDesLignes + SILENCE_FINAL);
+        };
+
+        // 4. Appui maintenu : souris et tactile.
+        const annulerAppui = () => {
+            if (timerAppui) {
+                clearTimeout(timerAppui);
+                timerAppui = null;
+            }
+            cake.classList.remove("souffle-en-cours");
+            pointerId = null;
+        };
+
+        cake.addEventListener("pointerdown", (event) => {
+            if (messageRevele) return;
+            if (event.pointerType === "mouse" && event.button !== 0) return;
+            if (pointerId !== null) return;
+
+            pointerId = event.pointerId;
+            debutAppui = performance.now();
+            supprimerClic = false;
+
+            try {
+                cake.setPointerCapture(event.pointerId);
+            } catch (e) {
+                // Capture non disponible : le pointerup suffira dans la plupart des cas.
+            }
+
+            if (reduction) return;
+
+            cake.classList.add("souffle-en-cours");
+            timerAppui = setTimeout(() => {
+                timerAppui = null;
+                reveler();
+            }, DUREE_APPUI);
+        });
+
+        cake.addEventListener("pointerup", (event) => {
+            if (messageRevele) {
+                pointerId = null;
+                return;
+            }
+            if (event.pointerId !== pointerId) return;
+
+            const duree = performance.now() - debutAppui;
+            pointerId = null;
+
+            if (timerAppui) {
+                clearTimeout(timerAppui);
+                timerAppui = null;
+            }
+            cake.classList.remove("souffle-en-cours");
+
+            // Un tap très court souffle aussi (accessibilité).
+            // Un appui plus long relâché avant 1,5 s annule le souffle.
+            if (reduction || duree < DUREE_TAP) {
+                reveler();
+            } else {
+                supprimerClic = true;
+            }
+        });
+
+        cake.addEventListener("pointercancel", () => {
+            annulerAppui();
+            supprimerClic = true;
+        });
+
+        // Le clic reste nécessaire pour les lecteurs d'écran et les
+        // navigateurs qui n'envoient pas d'événements pointer.
+        cake.addEventListener("click", () => {
+            if (supprimerClic) {
+                supprimerClic = false;
+                return;
+            }
+            if (!messageRevele) reveler();
+        });
+
+        cake.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                if (!messageRevele) reveler();
+            }
+        });
+
+        cake.addEventListener("contextmenu", (event) => {
+            event.preventDefault();
+        });
+
+        if (skip) {
+            skip.addEventListener("click", () => reveler(true));
+        }
+
+        // 5. Secours après 25 s : le compte part du moment où la page
+        //    devient réellement visible, pas du chargement du site.
+        if ("IntersectionObserver" in window) {
+            observateur = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+                        demarrerSecours();
+                    } else {
+                        arreterSecours();
+                    }
+                });
+            }, { threshold: [0.5] });
+            observateur.observe(page);
+        } else {
+            demarrerSecours();
         }
     },
 

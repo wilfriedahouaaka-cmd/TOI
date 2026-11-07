@@ -24,6 +24,7 @@
     <script src="js/scenes.js" defer></script>
     <script src="js/effets.js" defer></script>
     <script src="js/main.js" defer></script>
+    <script src="js/scrollfx.js" defer></script>
 </head>
 <body class="entry-lock">
 
@@ -33,9 +34,9 @@
     <main id="main-container">
         <!-- Page 0 : Couverture -->
         <section id="page-0" class="page cover-page">
-            <div class="reveal" style="display: flex; flex-direction: column; align-items: center;">
-                <div class="edition-tag">Édition spéciale</div>
-                <h1 class="masthead text-anton">CHIOMA</h1>
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <div class="edition-tag" data-fx="pop">Édition spéciale</div>
+                <h1 class="masthead text-anton" data-fx="slideL" data-ease="back" data-d="0">CHIOMA</h1>
                 <p class="cover-subtitle text-playfair">Un exemplaire, rien que pour toi</p>
 
                 <div class="cover-frame brutal-border brutal-shadow">
@@ -57,9 +58,9 @@
 
         <!-- Page 1 : Révélation -->
         <section id="page-1" class="page reveal-page">
-            <div class="reveal reveal-text-container">
-                <div class="reveal-bday">JOYEUX ANNIVERSAIRE</div>
-                <div class="reveal-name">CHIOMA</div>
+            <div class="reveal-text-container">
+                <div class="reveal-bday" data-fx="slideR" data-ease="back" data-d="0">JOYEUX ANNIVERSAIRE</div>
+                <div class="reveal-name" data-fx="slideL" data-ease="back" data-d="0.12">CHIOMA</div>
             </div>
             <div class="page-footer">
                 <div class="next-hint">SUIVANT : L'ÉDITO <div class="next-arrow"></div></div>
@@ -81,13 +82,13 @@
 
         <!-- Page 2 : Édito -->
         <section id="page-2" class="page edito-page">
-            <div class="reveal" style="width: 100%; max-width: 500px;">
+            <div style="width: 100%; max-width: 500px;">
                 <div class="edito-label">L'ÉDITO</div>
                 <div class="edito-content">
                     <span class="dropcap">I</span>l y a des personnes qu'on connaît à peine,<br>
-                    et pourtant, quelque chose passe.<br>
-                    Une présence. Une énergie. Une façon d'être là.<br>
-                    Ce soir, je voulais juste te le dire autrement.
+                    <span data-fx="mask" data-d="0">et pourtant, <span data-fx="hl">quelque chose passe</span>.</span><br>
+                    <span data-fx="mask" data-d="0.2">Une présence. Une énergie. Une façon d'être là.</span><br>
+                    <span data-fx="mask" data-d="0.4">Ce soir, je voulais juste te le dire autrement.</span>
                 </div>
             </div>
             <div class="page-footer">
@@ -98,7 +99,7 @@
         <!-- Page 3 : Le Dossier (A) -->
         <section id="page-3" class="page">
             <div class="reveal" style="width: 100%; max-width: 600px; text-align: center; margin-bottom: 100px;">
-                <div class="edito-label">LE DOSSIER</div>
+                <div class="edito-label" data-fx="slideL" data-ease="back" data-d="0">LE DOSSIER</div>
                 <div class="dossier-grid" id="dossier-a">
                     <!-- Injecté par JS -->
                 </div>
@@ -275,11 +276,11 @@
 
         <!-- Page 10 : Quatrième de Couverture -->
         <section id="page-10" class="page back-cover-page">
-            <div class="reveal" style="width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative;">
+            <div class="back-cover-stage">
 
-                <!-- Gâteau SVG avec 3 bougies -->
-                <div class="cake-container" id="cake-container">
-                    <svg class="cake-svg" viewBox="0 0 200 250" width="200" height="250" aria-hidden="true">
+                <!-- Gâteau SVG avec 3 bougies décoratives (jamais liées à un âge) -->
+                <button type="button" id="cake-container" class="cake-container" aria-label="Gâteau d'anniversaire, maintiens ton doigt pour souffler">
+                    <svg class="cake-svg" viewBox="0 0 200 250" width="200" height="250" aria-hidden="true" focusable="false">
                         <!-- Base du gâteau -->
                         <rect x="30" y="140" width="140" height="80" rx="0" fill="var(--paper)" stroke="var(--ink-black)" stroke-width="3"/>
                         <rect x="20" y="130" width="160" height="15" rx="0" fill="var(--sun-yellow)" stroke="var(--ink-black)" stroke-width="3"/>
@@ -288,19 +289,19 @@
                         <rect x="40" y="60" width="120" height="15" rx="0" fill="var(--vivid-coral)" stroke="var(--ink-black)" stroke-width="3"/>
                         <!-- Bougies (3) -->
                         <g id="candles-group">
-                            <g class="candle" data-index="0" style="cursor: pointer;">
+                            <g class="candle" data-index="0">
                                 <rect x="70" y="30" width="12" height="35" fill="var(--ink-black)" stroke="var(--ink-black)" stroke-width="2"/>
                                 <ellipse cx="76" cy="28" rx="8" ry="4" fill="none" stroke="var(--ink-black)" stroke-width="2"/>
                                 <path class="flame" d="M76 28 Q70 10 76 0 Q82 10 76 28" fill="var(--vivid-coral)" stroke="var(--sun-yellow)" stroke-width="1.5"/>
                                 <path class="smoke" d="M76 0 Q70 -20 76 -30 Q82 -20 76 0" fill="none" stroke="var(--ink-black)" stroke-width="1.5" opacity="0"/>
                             </g>
-                            <g class="candle" data-index="1" style="cursor: pointer;">
+                            <g class="candle" data-index="1">
                                 <rect x="94" y="25" width="12" height="40" fill="var(--ink-black)" stroke="var(--ink-black)" stroke-width="2"/>
                                 <ellipse cx="100" cy="23" rx="8" ry="4" fill="none" stroke="var(--ink-black)" stroke-width="2"/>
                                 <path class="flame" d="M100 23 Q94 5 100 -5 Q106 5 100 23" fill="var(--vivid-coral)" stroke="var(--sun-yellow)" stroke-width="1.5"/>
                                 <path class="smoke" d="M100 -5 Q94 -25 100 -35 Q106 -25 100 -5" fill="none" stroke="var(--ink-black)" stroke-width="1.5" opacity="0"/>
                             </g>
-                            <g class="candle" data-index="2" style="cursor: pointer;">
+                            <g class="candle" data-index="2">
                                 <rect x="118" y="30" width="12" height="35" fill="var(--ink-black)" stroke="var(--ink-black)" stroke-width="2"/>
                                 <ellipse cx="124" cy="28" rx="8" ry="4" fill="none" stroke="var(--ink-black)" stroke-width="2"/>
                                 <path class="flame" d="M124 28 Q118 10 124 0 Q130 10 124 28" fill="var(--vivid-coral)" stroke="var(--sun-yellow)" stroke-width="1.5"/>
@@ -315,25 +316,21 @@
                             <circle cx="120" cy="160" r="4" stroke="var(--ink-black)" stroke-width="1.5"/>
                         </g>
                     </svg>
-                </div>
+                    <span class="cake-hint" id="cake-hint">Maintiens ton doigt pour souffler</span>
+                </button>
 
-                <!-- Texte successif -->
-                <div class="back-cover-text" id="back-cover-text" style="margin-top: 2rem; max-width: 400px;">
-                    <p class="back-line" data-line="0">Chioma,</p>
-                    <p class="back-line" data-line="1">On se connaît encore peu…</p>
-                    <p class="back-line" data-line="2">Que cette année t'apporte tout ce que tu mérites.</p>
-                    <p class="back-line" data-line="3">Joyeux anniversaire.</p>
-                    <p class="back-line signature" data-line="4">— Wilfried</p>
-                </div>
+                <!-- Secours : apparaît après 25 s sans souffle -->
+                <button type="button" id="btn-voir-message" class="back-cover-skip" hidden>Voir le message</button>
 
-                <!-- Actions finales -->
-                <div class="back-cover-actions" style="margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem; align-items: center;">
-                    <a id="btn-whatsapp" class="btn-primary brutal-border brutal-shadow" href="#" target="_blank" rel="noopener">
-                        <span class="text-anton" style="font-size: 1rem;">Envoyer sur WhatsApp</span>
-                    </a>
-                    <button id="btn-revoir" class="btn-secondary brutal-border brutal-shadow" style="font-family: var(--font-space); font-weight: 700; text-transform: uppercase; padding: 12px 24px;">
-                        Revoir
-                    </button>
+                <!-- Message caché jusqu'à la révélation -->
+                <div class="back-cover-message" id="back-cover-message" hidden aria-hidden="true">
+                    <div class="back-cover-text" id="back-cover-text" aria-live="polite"></div>
+
+                    <div class="back-cover-final" id="back-cover-final" hidden>
+                        <p class="back-cover-question final-item">Si tu veux me dire ce que tu as ressenti…</p>
+                        <a id="btn-whatsapp" class="btn-primary final-item brutal-border brutal-shadow" href="#" target="_blank" rel="noopener">Écrire sur WhatsApp</a>
+                        <button id="btn-revoir" class="back-cover-revoir final-item" type="button">Revoir</button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -341,6 +338,12 @@
 
     <!-- Compteur de page fixe (caché tant que la gate est active) -->
     <div id="page-counter" class="page-counter">01 / 10</div>
+
+    <!-- Bouton fixe : coupe / rétablit la musique de fond -->
+    <button type="button" id="btn-music-toggle" class="music-toggle" aria-pressed="false" aria-label="Couper la musique de fond">
+        <span class="music-toggle-icon" aria-hidden="true">♪</span>
+        <span class="music-toggle-label">MUSIQUE</span>
+    </button>
 
     <!-- ============================================================
          PAGE D'ENTRÉE "SCELLÉE" (Gate) + QUIZ

@@ -20,7 +20,8 @@ window.AppConfig = {
         // Lot 2
         titresClaquent: true,   // titres Anton : glissement + lettres de CHIOMA
         autocollants: true,     // autocollants (rebond), polaroïds (pose), ruban
-        confettis: true         // éclat de 30 confettis sur la page 1
+        confettis: true,         // éclat de 30 confettis sur la page 1
+        scrollLie: true,          // Lot 4 : effets réversibles liés à la position du scroll
     },
 
     // --- PAGE D'ENTRÉE : QUIZ DU SCEAU ---
@@ -178,12 +179,95 @@ window.AppConfig = {
     MOTS_ELLE: ["Sensible.", "Entière.", "Ambitieuse."],
 
     // --- PAGE 8 : Ils parlent de toi ---
-    // Structure : { prenom, initiale, message, audio }
+    // Structure : { prenom, initiale, message, audio, vedette }
     // audio: chemin vers le fichier vocal (optionnel pour tests)
+    // vedette: true = carte complète ; false ou absent = mur de citations.
+    // Si aucune vedette true, les 5 premiers amis passent en vedette.
     AMIS: [
-        // Exemple à remplir :
-        // { prenom: "Marie", initiale: "M", message: "Tu es une lumière...", audio: "assets/audio/voix/ami1.mp3" },
-        // { prenom: "Thomas", initiale: "T", message: "Ton énergie...", audio: "assets/audio/voix/ami2.mp3" },
+        {
+            prenom: "Ma Cop's",
+            initiale: "C",
+            vedette: false,
+            message: "Hum je penses que t’es une personne consciencieuse qui sait ce qu’elle veut et où elle va qui penses à elle mais aussi au gens qui l’entourent gentille et très attentionné gentille intelligente un peu sauvage et folle sur les bords mais aussi très sensible et douce"
+        },
+        {
+            prenom: "Baby Rama",
+            initiale: "B",
+            vedette: false,
+            message: "Je dirais que tu es une personne adorable, gentille, aimable et toujours pleine de joie. Tu es surtout très intelligente et tu as un cœur qui mérite d’être apprécié Je suis heureuse de t’avoir comme amie ma chichi"
+        },
+        {
+            prenom: "Akatchi Mockey",
+            initiale: "A",
+            vedette: false,
+            message: "Une personne cool et aimable dont je ne me séparerai jamais pour rien au monde, une personne qui mérite l’amour et le bonheur du monde une personne qui a du caractère et qui n’a pas peur d’affronter la vie , une personne forte, courageuse qui fermera la bouche des sorcières et sorciers car son futur est rempli de bonheur et de réussite"
+        },
+        {
+            prenom: "Ma Voisine Isab",
+            initiale: "I",
+            vedette: false,
+            message: "Je dirais que tu est une fille tres courageuse et souriante très belle personne joyeuse surtout en tout cas tu est toi même y’a pas semblant dedans"
+        },
+        {
+            prenom: "Cécé",
+            initiale: "C",
+            vedette: false,
+            message: "Une fille merveilleuse"
+        },
+        {
+            prenom: "Bamba Kadidiatou",
+            initiale: "K",
+            vedette: false,
+            message: "T’es une personne bienveillante et la pour ses proches t’es quelqu’un de bien en un mot"
+        },
+        {
+            prenom: "Petit Frère",
+            initiale: "P",
+            vedette: false,
+            message: "Tu as quelque chose de spécial, une belle âme et un grand cœur. Tu fais partie de ces personnes qu’on ne voit peut-être pas tous les jours, mais qui finissent par occuper une place particulière dans notre vie malgré la distance. Avec le temps, j’ai appris à t’apprécier à ma manière, au point de te considérer comme ma grande sœur. J’ai beaucoup d’affection pour toi et je te souhaite sincèrement le meilleur dans la vie. Je ne prétends pas te connaître dans tous les aspects de ta vie, mais de ce que j’ai pu découvrir de toi au fil des années, je peux dire que tu es une personne formidable, une personne que je suis heureux d’avoir connue."
+        },
+        {
+            prenom: "Eunice",
+            initiale: "E",
+            vedette: false,
+            message: "Coucou chérie, tu vas bien ? Avec sincérité je pense que tu es une personne qui a beaucoup de valeur même si tu ne t’en rends pas toujours compte. Je te vois comme quelqu’un qui a un bon cœur ( surtout j’insiste sur le bon coeur ) tu sais aimer sincèrement"
+        },
+        {
+            prenom: "Jean-éliel.K",
+            initiale: "J",
+            vedette: false,
+            message: "Rien je pense rien de toi juste une petite fille impoli tchrrrrr avec ton front là"
+        },
+        {
+            prenom: "Percide",
+            initiale: "P",
+            vedette: false,
+            message: "Franchement je te trouve assez courageuse, tu as la joie de vivre et tu communiques ta joie autour de toi"
+        },
+        {
+            prenom: "Ma Mariam",
+            initiale: "M",
+            vedette: false,
+            message: "En tte sincérité tu es une fille très intelligente mature gentille bienveillante et aussi je te vois devenir une grande chef d’entreprise, tu as une belle âme ma chérie"
+        },
+        {
+            prenom: "Ma Go Djazz",
+            initiale: "D",
+            vedette: false,
+            message: "une personne incroyable, courageuse et gentil ."
+        },
+        {
+            prenom: "Mon Bebe Uriell",
+            initiale: "U",
+            vedette: false,
+            message: "Tu es une tres belle un amour juste tu fais pas semblant avec ton entourage tu juste amour mon bb"
+        },
+        {
+            prenom: "Kane Noura",
+            initiale: "N",
+            vedette: false,
+            message: "Que tu es une très belle personne princesse Tu formidables aimables joviales ma belle"
+        }
     ],
 
     // --- PAGE 9 : En Vidéo ---
@@ -203,8 +287,10 @@ window.AppConfig = {
     BACK_COVER: {
         lines: [
             "Chioma,",
-            "On se connaît encore peu…",
-            "Que cette année t'apporte tout ce que tu mérites.",
+            "Joyeux anniversaire.",
+            "Je suis ravi de te connaître en cette année 2026, et j'espère que nos échanges pourront continuer ainsi, longtemps, dans la simplicité et la bonne humeur.",
+            "On se connaît encore peu, mais je voulais que tu saches que tu comptes pour moi.",
+            "Que cette année te rapproche de tout ce que tu vises.",
             "Joyeux anniversaire.",
             "— Wilfried"
         ],
