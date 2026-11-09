@@ -408,44 +408,24 @@ window.AppScenes = {
         const photos = window.AppConfig?.PHOTOS_A || [];
         grid.innerHTML = "";
 
-        // L'effet « autocollants » gère la pose des polaroïds. S'il est
-        // coupé (ou si l'utilisateur préfère réduire les animations),
-        // on garde l'apparition reveal d'origine.
-        const poseActive = !!(
-            window.AppEffets &&
-            typeof window.AppEffets.actif === "function" &&
-            typeof window.AppEffets.mouvementReduit === "function" &&
-            window.AppEffets.actif("autocollants") &&
-            !window.AppEffets.mouvementReduit() &&
-            typeof IntersectionObserver === "function"
-        );
-
-        photos.forEach((photo) => {
+        photos.forEach((photo, i) => {
             const pol = document.createElement("div");
-            pol.className = "brutal-polaroid " + (poseActive ? "polaroid-a-poser" : "reveal");
+            pol.className = "pol";
+            pol.setAttribute("data-fx", "drop");
+            pol.dataset.d = i === 0 ? "0" : (i === 1 ? "0.15" : "0.3");
 
-            // Rotation légère aléatoire, conservée dans --rot pour que
-            // l'animation de pose ne l'écrase pas.
+            // Inclinaison légère conservée dans --r (nombre, sans "deg").
             const rot = (Math.random() * 6 - 3).toFixed(2);
-            pol.style.setProperty("--rot", `${rot}deg`);
-
-            // Sans l'effet, on conserve exactement l'ancien transform inline.
-            if (!poseActive) {
-                pol.style.transform = `rotate(${rot}deg)`;
-            }
+            pol.style.setProperty("--r", rot);
 
             pol.innerHTML = `
-                <div class="washi-tape"></div>
-                <img src="${photo.src}" alt="Photo" loading="lazy">
-                <div class="brutal-caption">${photo.legende}</div>
+                <em class="washi-tape"></em>
+                <div class="ph brutal-polaroid">
+                    <img src="${photo.src}" alt="Photo" loading="lazy">
+                    <div class="brutal-caption">${photo.legende}</div>
+                </div>
             `;
             grid.appendChild(pol);
-
-            // Avec l'effet, c'est AppEffets qui observe le polaroïd.
-            // Sans l'effet, on garde l'observation reveal d'origine.
-            if (!poseActive && window.App && typeof window.App.observeElement === "function") {
-                window.App.observeElement(pol);
-            }
         });
     },
 
@@ -463,6 +443,9 @@ window.AppScenes = {
         photos.forEach((photo, i) => {
             const panel = document.createElement("div");
             panel.className = "tripli-panel";
+            panel.setAttribute("data-fx", "drop");
+            panel.dataset.d = i === 0 ? "0" : (i === 1 ? "0.15" : "0.3");
+            panel.style.setProperty("--r", "0");
 
             panel.innerHTML = `
                 <img src="${photo.src}" alt="Photo" loading="lazy">
@@ -1011,14 +994,9 @@ window.AppScenes = {
         grid.innerHTML = "";
         mots.forEach((mot, i) => {
             const block = document.createElement("div");
-            block.className = "mot-block reveal";
-            block.style.transitionDelay = `${i * 0.15}s`;
-            block.innerHTML = `<div class="mot-word">${mot}</div>`;
+            block.className = "mot-block";
+            block.innerHTML = `<div class="mot-word" data-fx="${i % 2 === 0 ? "slideL" : "slideR"}" data-ease="back" data-d="${(i * 0.12).toFixed(2)}">${mot}</div>`;
             grid.appendChild(block);
-
-            if (window.App && typeof window.App.observeElement === "function") {
-                window.App.observeElement(block);
-            }
         });
     },
 

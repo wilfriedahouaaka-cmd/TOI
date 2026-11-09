@@ -35,8 +35,8 @@
         <!-- Page 0 : Couverture -->
         <section id="page-0" class="page cover-page">
             <div style="display: flex; flex-direction: column; align-items: center;">
-                <div class="edition-tag" data-fx="pop">Édition spéciale</div>
-                <h1 class="masthead text-anton" data-fx="slideL" data-ease="back" data-d="0">CHIOMA</h1>
+                <div class="edition-tag">Édition spéciale</div>
+                <h1 class="masthead text-anton">CHIOMA</h1>
                 <p class="cover-subtitle text-playfair">Un exemplaire, rien que pour toi</p>
 
                 <div class="cover-frame brutal-border brutal-shadow">
@@ -74,7 +74,7 @@
              Affiché par js/effets.js si AppConfig.EFFETS.bandeaux.
              ============================================================ -->
         <div class="bandeau-defilant" aria-hidden="true" hidden>
-            <div class="bandeau-track">
+            <div class="bandeau-track" id="band">
                 <span class="bandeau-groupe">CHIOMA • ÉDITION SPÉCIALE • CHIOMA • ÉDITION SPÉCIALE • CHIOMA • ÉDITION SPÉCIALE • CHIOMA • ÉDITION SPÉCIALE • CHIOMA • ÉDITION SPÉCIALE • CHIOMA • ÉDITION SPÉCIALE •</span>
                 <span class="bandeau-groupe">CHIOMA • ÉDITION SPÉCIALE • CHIOMA • ÉDITION SPÉCIALE • CHIOMA • ÉDITION SPÉCIALE • CHIOMA • ÉDITION SPÉCIALE • CHIOMA • ÉDITION SPÉCIALE • CHIOMA • ÉDITION SPÉCIALE •</span>
             </div>
@@ -85,10 +85,10 @@
             <div style="width: 100%; max-width: 500px;">
                 <div class="edito-label">L'ÉDITO</div>
                 <div class="edito-content">
-                    <span class="dropcap">I</span>l y a des personnes qu'on connaît à peine,<br>
-                    <span data-fx="mask" data-d="0">et pourtant, <span data-fx="hl">quelque chose passe</span>.</span><br>
-                    <span data-fx="mask" data-d="0.2">Une présence. Une énergie. Une façon d'être là.</span><br>
-                    <span data-fx="mask" data-d="0.4">Ce soir, je voulais juste te le dire autrement.</span>
+                    <span data-fx="mask" data-d="0"><span class="dropcap">I</span>l y a des personnes qu'on connaît à peine,</span><br>
+                    <span data-fx="mask" data-d="0.2">et pourtant, <span data-fx="hl">quelque chose passe</span>.</span><br>
+                    <span data-fx="mask" data-d="0.4">Une présence. Une énergie. Une façon d'être là.</span><br>
+                    <span data-fx="mask" data-d="0.6">Ce soir, je voulais juste te le dire autrement.</span>
                 </div>
             </div>
             <div class="page-footer">
@@ -98,7 +98,7 @@
 
         <!-- Page 3 : Le Dossier (A) -->
         <section id="page-3" class="page">
-            <div class="reveal" style="width: 100%; max-width: 600px; text-align: center; margin-bottom: 100px;">
+            <div style="width: 100%; max-width: 600px; text-align: center; margin-bottom: 100px;">
                 <div class="edito-label" data-fx="slideL" data-ease="back" data-d="0">LE DOSSIER</div>
                 <div class="dossier-grid" id="dossier-a">
                     <!-- Injecté par JS -->
@@ -111,8 +111,8 @@
 
         <!-- Page 4 : Tri-pli (B) -->
         <section id="page-4" class="page">
-            <div class="reveal" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-                <div class="edito-label">TRI-PLI</div>
+            <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+                <div class="edito-label" data-fx="slideR" data-ease="back" data-d="0.12">TRI-PLI</div>
                 <div class="tripli-container" id="tripli-b">
                     <!-- Injecté par JS -->
                 </div>
@@ -150,14 +150,14 @@
 
         <!-- Page 6 : Ses Goûts -->
         <section id="page-6" class="page gouts-page">
-            <div class="reveal" style="width: 100%; max-width: 600px;">
+            <div style="width: 100%; max-width: 600px;">
                 <div class="edito-label">DANS SON MONDE</div>
 
                 <!-- Carte Black Clover -->
                 <div class="gout-card brutal-border brutal-shadow" id="gout-black-clover">
                     <div class="gout-card-header">
-                        <span class="gout-tag text-anton">ANIME</span>
-                        <h3 class="gout-title text-anton">Black Clover</h3>
+                        <span class="gout-tag text-anton" data-fx="pop" data-ease="back">ANIME</span>
+                        <h3 class="gout-title text-anton" data-fx="slideL" data-ease="back" data-d="0">Black Clover</h3>
                     </div>
                     <div class="gout-card-content">
                         <!-- Photo de l'univers (branchée par scenes.js depuis config.js) -->
@@ -175,8 +175,8 @@
                 <!-- Carte True Beauty -->
                 <div class="gout-card brutal-border brutal-shadow" id="gout-true-beauty">
                     <div class="gout-card-header">
-                        <span class="gout-tag text-anton">SÉRIE</span>
-                        <h3 class="gout-title text-anton">True Beauty</h3>
+                        <span class="gout-tag text-anton" data-fx="pop" data-ease="back">SÉRIE</span>
+                        <h3 class="gout-title text-anton" data-fx="slideR" data-ease="back" data-d="0.12">True Beauty</h3>
                     </div>
                     <div class="gout-card-content">
                         <!-- Photo de la série (branchée par scenes.js depuis config.js) -->
@@ -205,7 +205,7 @@
                      ============================================================ -->
                 <div class="disquettes-block" id="disquettes-block">
                     <div class="disquette-shelf-label">
-                        <span class="gout-tag text-anton">DANS SES OREILLES</span>
+                        <span class="gout-tag text-anton" data-fx="pop" data-ease="back">DANS SES OREILLES</span>
                     </div>
                     <p class="disquette-consigne text-playfair" id="disquette-consigne">Touche un disque pour l'écouter.</p>
 
@@ -226,7 +226,7 @@
 
         <!-- Page 7 : Elle se décrit -->
         <section id="page-7" class="page mots-page">
-            <div class="reveal" style="width: 100%; max-width: 600px; text-align: center;">
+            <div style="width: 100%; max-width: 600px; text-align: center;">
                 <div class="edito-label">ELLE SE DÉCRIT</div>
                 <p class="mots-intro text-playfair" style="font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.7;">
                     Tu te décris comme…

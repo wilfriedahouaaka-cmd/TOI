@@ -46,39 +46,106 @@
     }
 }
 
-/* --- EFFETS LIÉS AU SCROLL (Lot 4) --- */
+/* ============================================================
+   EFFETS LIÉS AU SCROLL (Lot 4) — réversibles
+   ------------------------------------------------------------
+   Le moteur js/scrollfx.js pose --e (0 → 1) sur chaque [data-fx].
+   L'état caché n'existe QUE sous html.scrollfx : sans JS (ou si le
+   moteur ne démarre pas), rien ne reste invisible.
+   ============================================================ */
 
-/* L'état caché (--e à 0) ne s'applique QUE sous html.scrollfx */
-html.scrollfx [data-fx]{--e:0}
+/* Le scroll-snap se bat contre les animations pilotées par le scroll. */
+html.scrollfx #main-container { scroll-snap-type: none; }
+html.scrollfx .page { scroll-snap-align: none; }
+
+html.scrollfx [data-fx] { --e: 0; }
 
 /* Glissements latéraux */
-html.scrollfx [data-fx=slideL]{transform:translateX(calc((1 - var(--e))*-115%))}
-html.scrollfx [data-fx=slideR]{transform:translateX(calc((1 - var(--e))*115%))}
+html.scrollfx [data-fx=slideL] {
+    transform: translateX(calc((1 - var(--e)) * -115%));
+}
+html.scrollfx [data-fx=slideR] {
+    transform: translateX(calc((1 - var(--e)) * 115%));
+}
 
 /* Pop : échelle + rotation + opacité */
-html.scrollfx [data-fx=pop]{transform:scale(calc(.3 + .7*var(--e))) rotate(calc((1 - var(--e))*-30deg));opacity:min(1,calc(var(--e)*4))}
+html.scrollfx [data-fx=pop] {
+    transform: scale(calc(.3 + .7 * var(--e))) rotate(calc((1 - var(--e)) * -30deg));
+    opacity: min(1, calc(var(--e) * 4));
+}
 
 /* Masque : dévoilement latéral */
-html.scrollfx [data-fx=mask]{clip-path:inset(0 calc((1 - var(--e))*100%) 0 0)}
+html.scrollfx [data-fx=mask] {
+    clip-path: inset(0 calc((1 - var(--e)) * 100%) 0 0);
+}
 
 /* Surligneur : remplissage horizontal avec fond jaune de base */
-html.scrollfx [data-fx=hl]{
+html.scrollfx [data-fx=hl] {
     background-image: linear-gradient(var(--sun-yellow), var(--sun-yellow));
     background-repeat: no-repeat;
     background-position: 0 90%;
-    background-size:calc(var(--e)*100%) .5em;
+    background-size: calc(var(--e) * 100%) .5em;
 }
 
-/* Drop : chute avec balancement et dévoilement photo */
-html.scrollfx [data-fx=drop]{
-    --q:clamp(0,calc((var(--e) - .3)/.7),1);
-    --t:clamp(0,calc((var(--e)/.35),1);
-    transform-origin:50% 0;
-    transform:rotate(calc(var(--r)*1deg + (1 - var(--q))*var(--r)*-1.5deg))
+/* Drop : la photo se dévoile de haut en bas, le scotch se déroule
+   depuis la gauche, puis l'ensemble se balance et se calme.
+   --r = inclinaison en degrés (nombre, ex. "-2.4"). */
+html.scrollfx [data-fx=drop] {
+    --q: clamp(0, calc((var(--e) - .3) / .7), 1);
+    --t: clamp(0, calc(var(--e) / .35), 1);
+    transform-origin: 50% 0;
+    transform: rotate(calc(var(--r, 0) * 1deg + (1 - var(--q)) * var(--r, 0) * -1.5deg));
 }
-/* Photo du polaroïd dévoilée de haut en bas */
-html.scrollfx .pol .ph{clip-path:inset(0 0 calc((1 - var(--q,1))*100%) 0)}
-/* Scotch qui se déroule depuis la gauche */
-html.scrollfx .pol em{transform-origin:0 50%;transform:rotate(-4deg) scaleX(var(--t,1));opacity:min(1,calc(var(--t,1)*12))}
 
-/* Fallback : si --q ou --t n'existent pas, tout reste visible */
+/* Polaroïd : structure .pol > em (scotch) + .ph (photo + légende) */
+.pol { position: relative; }
+.pol { transform: rotate(calc(var(--r, 0) * 1deg)); }
+
+html.scrollfx .pol .ph {
+    clip-path: inset(0 0 calc((1 - var(--q, 1)) * 100%) 0);
+}
+
+html.scrollfx .pol em {
+    display: block;
+    transform-origin: 0 50%;
+    transform: translateX(-50%) rotate(-2deg) scaleX(var(--t, 1));
+    opacity: min(1, calc(var(--t, 1) * 12));
+}
+
+/* Tri-pli : les volets se dévoilent aussi de haut en bas. */
+html.scrollfx .tripli-panel img {
+    clip-path: inset(0 0 calc((1 - var(--q, 1)) * 100%) 0);
+}
+
+/* Bandeau piloté par le scroll (un seul) : on coupe la boucle CSS.
+   Le moteur translate le track dans les deux sens. */
+html.scrollfx #band {
+    animation: none !important;
+    will-change: transform;
+}
+
+/* Accessibilité : tout à plat, même si la préférence change en cours. */
+@media (prefers-reduced-motion: reduce) {
+    html.scrollfx [data-fx] { --e: 1 !important; }
+
+    html.scrollfx [data-fx=slideL],
+    html.scrollfx [data-fx=slideR],
+    html.scrollfx [data-fx=pop],
+    html.scrollfx [data-fx=drop] {
+        transform: none !important;
+        opacity: 1 !important;
+    }
+
+    html.scrollfx [data-fx=mask],
+    html.scrollfx .pol .ph,
+    html.scrollfx .tripli-panel img {
+        clip-path: none !important;
+    }
+
+    html.scrollfx .pol em {
+        transform: translateX(-50%) rotate(-2deg) !important;
+        opacity: .9 !important;
+    }
+
+    html.scrollfx #band { transform: none !important; }
+}

@@ -217,7 +217,7 @@ window.AppEffets = {
         if (!this.actif("titresClaquent")) return;
 
         document.querySelectorAll(".masthead, .reveal-name").forEach((el) => {
-            if (el.dataset.effetLot2) return;
+            if (el.dataset.effetLot2 || el.hasAttribute("data-fx")) return;
             el.dataset.effetLot2 = "lettres";
             this._decouperLettres(el);
             if (this._observateurLot2) this._observateurLot2.observe(el);
@@ -225,7 +225,7 @@ window.AppEffets = {
 
         const titres = document.querySelectorAll(".reveal-bday, .gout-title, .mot-word");
         titres.forEach((el, index) => {
-            if (el.dataset.effetLot2) return;
+            if (el.dataset.effetLot2 || el.hasAttribute("data-fx")) return;
             el.dataset.effetLot2 = "titre";
             el.classList.add("titre-a-claquer");
             // Alterne gauche / droite pour éviter un bloc uniforme.
@@ -282,7 +282,7 @@ window.AppEffets = {
         if (!this.actif("autocollants")) return;
 
         document.querySelectorAll(".edition-tag, .gout-tag").forEach((el) => {
-            if (el.dataset.effetLot2) return;
+            if (el.dataset.effetLot2 || el.hasAttribute("data-fx")) return;
             el.dataset.effetLot2 = "autocollant";
             el.classList.add("autocollant-a-poser");
             if (this._observateurLot2) this._observateurLot2.observe(el);
@@ -297,7 +297,7 @@ window.AppEffets = {
         if (!this.actif("autocollants")) return;
 
         document.querySelectorAll(".brutal-polaroid.polaroid-a-poser").forEach((el) => {
-            if (el.dataset.effetLot2) return;
+            if (el.dataset.effetLot2 || el.hasAttribute("data-fx")) return;
             el.dataset.effetLot2 = "polaroid";
             if (this._observateurLot2) this._observateurLot2.observe(el);
         });
